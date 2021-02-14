@@ -1,0 +1,10 @@
+export 'package:analyzer/dart/ast/ast.dart';
+export 'package:analyzer/src/dart/ast/ast.dart';
+export 'package:analyzer/dart/analysis/utilities.dart';
+export 'package:analyzer/dart/ast/syntactic_entity.dart';
+export 'package:analyzer/dart/analysis/results.dart';
+export 'package:analyzer/dart/analysis/features.dart';
+export 'package:analyzer/error/error.dart';
+export 'package:analyzer/source/line_info.dart';
+export 'package:analyzer/dart/ast/visitor.dart';
+// export 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
