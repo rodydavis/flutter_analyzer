@@ -6,8 +6,7 @@ import 'comment.dart';
 import 'variable.dart';
 
 class FieldVisitor extends CodeVisitor {
-  FieldVisitor(this.root, this.parent) {
-    this.root.visitChildren(this);
+  FieldVisitor(this.root, this.parent) : super() {
     if (root.documentationComment != null) {
       this.comment = CommentVisitor(root.documentationComment!, this);
     }

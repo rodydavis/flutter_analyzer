@@ -26,7 +26,6 @@ class 1MyClass {}
     const SOURCE_CODE = r'''
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -58,6 +57,7 @@ class MyWidget extends StatelessWidget {
     expect(parser.result.errors.length == 0, equals(true));
     expect(parser.visitor.classes[0].name, equals('MyApp'));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
+    parser.debug();
   });
 
   test('modify multiple properties', () {
@@ -87,5 +87,20 @@ class MyClass {
     expect(obj.constructors[1].name, equals('about'));
     expect(fieldA.name, equals('a1'));
     expect(fieldB.name, equals('b1'));
+  });
+
+  test('test enums', () {
+    const SOURCE_CODE = r'''
+enum MyEnum {one, two, three}
+''';
+    final parser = FlutterParser.fromString(SOURCE_CODE);
+    expect(parser.result.errors.length == 0, equals(true));
+    final obj = parser.visitor.enums[0];
+    expect(obj.name, equals('MyEnum'));
+    expect(obj.values[1].name, equals('two'));
+    obj.name = 'MyEnum1';
+    obj.values[1].name = 'two1';
+    expect(obj.name, equals('MyEnum1'));
+    expect(obj.values[1].name, equals('two1'));
   });
 }

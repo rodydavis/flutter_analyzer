@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_analyzer/src/analyzer.dart';
 import 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
 import 'package:flutter_analyzer/src/parser/parser.dart';
@@ -24,4 +25,10 @@ extension StringUtils on String {
   SimpleIdentifierImpl toNode(int offset) => textNode(this, offset);
 }
 
-abstract class CodeVisitor extends RecursiveAstVisitor<void> {}
+@mustCallSuper
+abstract class CodeVisitor extends RecursiveAstVisitor<void> {
+  CodeVisitor() {
+    this.root.visitChildren(this);
+  }
+  AstNode get root;
+}

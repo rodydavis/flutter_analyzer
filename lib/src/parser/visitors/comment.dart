@@ -3,8 +3,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import '../utils.dart';
 
 class CommentVisitor extends CodeVisitor {
-  CommentVisitor(this.root, this.parent) {
-    this.root.visitChildren(this);
+  CommentVisitor(this.root, this.parent) : super() {
+    this._parse();
+  }
+
+  void _parse() {
     for (final token in this.root.tokens) {
       final String value = token.value().toString().trimLeft();
       if (value.startsWith('/// ')) {

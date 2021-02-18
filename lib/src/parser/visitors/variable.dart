@@ -6,8 +6,7 @@ import 'expression.dart';
 
 class VariableVisitor extends CodeVisitor {
   ExpressionVisitor? expression;
-  VariableVisitor(this.root, this.parent) {
-    this.root.visitChildren(this);
+  VariableVisitor(this.root, this.parent) : super() {
     if (hasValue) expression = ExpressionVisitor(root.initializer!, this);
   }
   final CodeVisitor parent;

@@ -7,8 +7,7 @@ import 'field.dart';
 import 'file.dart';
 
 class ClassVisitor extends CodeVisitor {
-  ClassVisitor(this.root, this.parent) {
-    this.root.visitChildren(this);
+  ClassVisitor(this.root, this.parent) : super() {
     if (root.documentationComment != null) {
       this.comment = CommentVisitor(root.documentationComment!, this);
     }
@@ -43,4 +42,9 @@ class ClassVisitor extends CodeVisitor {
     fields.add(FieldVisitor(node, this));
     super.visitFieldDeclaration(node);
   }
+
+  // @override
+  // void visitMethodDeclaration(MethodDeclaration node) {
+  //   super.visitMethodDeclaration(node);
+  // }
 }

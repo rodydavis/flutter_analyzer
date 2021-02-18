@@ -4,9 +4,8 @@ import '../utils.dart';
 import 'class.dart';
 
 class ConstructorVisitor extends CodeVisitor {
-  ConstructorVisitor(this.root, this.parent) {
-    this.root.visitChildren(this);
-  }
+  ConstructorVisitor(this.root, this.parent) : super();
+  
   final ConstructorDeclaration root;
   final ClassVisitor parent;
 

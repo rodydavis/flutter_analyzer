@@ -10,9 +10,8 @@ import 'visitors/file.dart';
 
 class FlutterParser {
   FlutterParser.fromString(String source) {
-    visitor = FileVisitor(this);
     this.code = source;
-    this.result.unit.visitChildren(visitor);
+    visitor = FileVisitor(this.result.unit, this);
   }
 
   late String _code;
