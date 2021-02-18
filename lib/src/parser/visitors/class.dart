@@ -3,6 +3,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import '../parser.dart';
 import '../utils.dart';
 import 'comment.dart';
+import 'constructor.dart';
 import 'field.dart';
 
 class ClassVisitor extends CodeVisitor {
@@ -22,17 +23,16 @@ class ClassVisitor extends CodeVisitor {
   }
 
   bool get isPrivate => name.startsWith('_');
-  final List<String> constructors = [];
+  
   final List<FieldVisitor> fields = [];
+  bool get hasFields => fields.isNotEmpty;
+
+  final List<ConstructorVisitor> constructors = [];
+  bool get hasConstructor => constructors.isNotEmpty;
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    final String? constructorName = node.name?.toString();
-    if (constructorName != null) {
-      constructors.add("$name.$constructorName");
-    } else {
-      constructors.add("$name");
-    }
+    constructors.add(ConstructorVisitor(node, this));
     super.visitConstructorDeclaration(node);
   }
 

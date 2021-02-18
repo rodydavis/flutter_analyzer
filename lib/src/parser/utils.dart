@@ -18,4 +18,9 @@ exploreChildren(Set<String> types, AstNode child) {
   }
 }
 
+extension StringUtils on String {
+  bool get isPrivate => this.startsWith('_');
+  SimpleIdentifierImpl toNode(int offset) => textNode(this, offset);
+}
+
 class CodeVisitor extends RecursiveAstVisitor<void> {}
