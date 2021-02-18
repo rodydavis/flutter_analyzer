@@ -4,6 +4,7 @@ import '../parser.dart';
 import '../utils.dart';
 import 'class.dart';
 import 'enum.dart';
+import 'mixin.dart';
 
 class FileVisitor extends CodeVisitor {
   FileVisitor(this.root, this.parent) : super();
@@ -11,6 +12,7 @@ class FileVisitor extends CodeVisitor {
   final CompilationUnit root;
   final FlutterParser parent;
   final List<ClassVisitor> classes = [];
+  final List<MixinVisitor> mixins = [];
   final List<EnumVisitor> enums = [];
 
   @override
@@ -23,5 +25,11 @@ class FileVisitor extends CodeVisitor {
   void visitEnumDeclaration(EnumDeclaration node) {
     enums.add(EnumVisitor(node, this));
     super.visitEnumDeclaration(node);
+  }
+
+  @override
+  void visitMixinDeclaration(MixinDeclaration node) {
+    mixins.add(MixinVisitor(node, this));
+    super.visitMixinDeclaration(node);
   }
 }

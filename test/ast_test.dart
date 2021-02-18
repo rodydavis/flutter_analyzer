@@ -30,7 +30,7 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget with You implements Me {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,10 +52,21 @@ class MyWidget extends StatelessWidget {
       );
   }
 }
+
+abstract class Me {
+
+}
+
+mixin You {
+
+}
 ''';
     final parser = FlutterParser.fromString(SOURCE_CODE);
     expect(parser.result.errors.length == 0, equals(true));
     expect(parser.visitor.classes[0].name, equals('MyApp'));
+    expect(parser.visitor.classes[0].extendsClause, equals('StatelessWidget'));
+    expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
+    expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
     parser.debug();
   });

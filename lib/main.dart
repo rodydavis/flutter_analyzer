@@ -8,6 +8,7 @@ void main() {
   runApp(MyApp());
 }
 
+// ignore: slash_for_doc_comments
 /**
  * Block Comment
  * 

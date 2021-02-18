@@ -4,35 +4,30 @@ import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
+import 'package:flutter/material.dart';
 
 import 'utils.dart';
 import 'visitors/file.dart';
 
 class FlutterParser {
-  FlutterParser.fromString(String source) {
-    this.code = source;
+  FlutterParser.fromString(this.code) {
+    this.result = parseString(
+      content: this.code,
+      featureSet: FeatureSet.latestLanguageVersion(),
+      throwIfDiagnostics: false,
+    );
     visitor = FileVisitor(this.result.unit, this);
   }
 
-  late String _code;
+  final String code;
   late FileVisitor visitor;
 
+  @visibleForTesting
   void debug() {
     final Set<String> types = {};
     exploreChildren(types, this.result.unit);
     print(toSource());
     print(types);
-  }
-
-  /// Raw source code
-  String get code => this._code;
-  set code(String value) {
-    this._code = value;
-    this.result = parseString(
-      content: value,
-      featureSet: FeatureSet.latestLanguageVersion(),
-      throwIfDiagnostics: false,
-    );
   }
 
   /// Dart Parse String Result
@@ -45,9 +40,6 @@ class FlutterParser {
   List<AnalysisError> get errors => result.errors;
 
   String toSource() => result.unit.toSource();
-
-  /// Dart source code
-  String save() => this.code = toSource();
 
   /// Information about lines in the content.
   LineInfo get lineInfo => this.result.lineInfo;

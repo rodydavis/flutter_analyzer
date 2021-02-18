@@ -14,14 +14,20 @@ class ClassVisitor extends CodeVisitor {
   }
 
   final FileVisitor parent;
-
   final ClassDeclaration root;
+
   CommentVisitor? comment;
 
   String get name => root.name.toString();
   set name(String value) {
     root.name = textNode(value, root.name.offset);
   }
+
+  String? get extendsClause => root.extendsClause?.superclass.toString();
+  List<String>? get withClause =>
+      root.withClause?.mixinTypes.map((e) => e.toString()).toList();
+  List<String>? get implementsClause =>
+      root.implementsClause?.interfaces.map((e) => e.toString()).toList();
 
   bool get isPrivate => name.startsWith('_');
 

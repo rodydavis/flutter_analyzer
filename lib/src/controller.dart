@@ -36,7 +36,7 @@ class DartController extends TextEditingController {
   String analyze(String val) {
     final parser = FlutterParser.fromString(val);
     highlighter = DartHighlighter(parser, this.theme, this);
-    final src = parser.save();
+    final src = parser.toSource();
     final formatter = Formatter(src);
     return formatter.format();
   }
