@@ -22,13 +22,6 @@ class FlutterParser {
   final String code;
   late FileVisitor visitor;
 
-  @visibleForTesting
-  void debug() {
-    final Set<String> types = {};
-    exploreChildren(types, this.result.unit);
-    print(toSource());
-    print(types);
-  }
 
   /// Dart Parse String Result
   late ParseStringResult result;

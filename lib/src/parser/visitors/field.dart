@@ -29,3 +29,4 @@ class FieldVisitor extends CodeVisitor {
   List<VariableVisitor> get variables =>
       root.fields.variables.map((e) => VariableVisitor(e, this)).toList();
 }
+

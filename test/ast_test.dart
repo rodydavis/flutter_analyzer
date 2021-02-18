@@ -68,14 +68,15 @@ mixin You {
     expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
     expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
-    parser.debug();
   });
 
   test('modify multiple properties', () {
     const SOURCE_CODE = r'''
 class MyClass {
-  MyClass(this.value);
-  MyClass.info(this.value);
+  MyClass(this.value, {int extra = 0});
+  MyClass.info(this.value, this.a, {int extra, int extra2});
+  MyClass.empty({int extra, int extra2 = 0}) : this.value = extra2;
+  final int value;
   int a = 0;
   int b = 0;
 }
@@ -83,19 +84,22 @@ class MyClass {
     final parser = FlutterParser.fromString(SOURCE_CODE);
     expect(parser.result.errors.length == 0, equals(true));
     final obj = parser.visitor.classes[0];
-    final fieldA = obj.fields[0].variables[0];
-    final fieldB = obj.fields[1].variables[0];
+    final value = obj.fields[0].variables[0];
+    final fieldA = obj.fields[1].variables[0];
+    final fieldB = obj.fields[2].variables[0];
     expect(obj.name, equals('MyClass'));
     expect(obj.constructors[0].name, equals(null));
     expect(obj.constructors[1].name, equals('info'));
     expect(fieldA.name, equals('a'));
     expect(fieldB.name, equals('b'));
     obj.name = 'MyClass1';
+    value.name = 'value0';
     fieldA.name = 'a1';
     fieldB.name = 'b1';
     obj.constructors[1].name = 'about';
     expect(obj.name, equals('MyClass1'));
     expect(obj.constructors[1].name, equals('about'));
+    expect(value.name, equals('value0'));
     expect(fieldA.name, equals('a1'));
     expect(fieldB.name, equals('b1'));
   });
