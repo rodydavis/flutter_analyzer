@@ -19,7 +19,7 @@ class MethodVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = textNode(value, root.name.offset);
+    root.name = value.toNode(root.name.offset);
   }
 }
 
@@ -35,6 +35,6 @@ class FunctionVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = textNode(value, root.name.offset);
+    root.name = value.toNode(root.name.offset);
   }
 }

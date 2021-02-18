@@ -11,7 +11,7 @@ class EnumVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = textNode(value, root.name.offset);
+    root.name = value.toNode(root.name.offset);
   }
 
   final List<EnumValueVisitor> values = [];
@@ -28,7 +28,7 @@ class EnumValueVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = textNode(value, root.name.offset);
+    root.name = value.toNode(root.name.offset);
   }
 
   final EnumVisitor parent;

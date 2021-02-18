@@ -2,13 +2,12 @@ import 'package:analyzer/dart/ast/ast.dart';
 
 import '../utils.dart';
 import 'expression.dart';
-import 'field.dart';
 
 class VariableVisitor extends CodeVisitor {
   VariableVisitor(this.root, this.parent) : super() {
     if (hasValue) expression = ExpressionVisitor(root.initializer!, this);
   }
-  final FieldVisitor parent;
+  final CodeVisitor parent;
   final VariableDeclaration root;
   bool get isLate => root.isLate;
   bool get isFinal => root.isFinal;
@@ -21,6 +20,6 @@ class VariableVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = textNode(value, root.name.offset);
+    root.name = value.toNode(root.name.offset);
   }
 }

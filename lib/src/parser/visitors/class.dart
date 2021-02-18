@@ -21,7 +21,7 @@ class ClassVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = textNode(value, root.name.offset);
+    root.name = value.toNode(root.name.offset);
   }
 
   String? get extendsClause => root.extendsClause?.superclass.toString();

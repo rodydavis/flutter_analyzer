@@ -6,18 +6,10 @@ import 'package:flutter_analyzer/src/analyzer.dart';
 import 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
 import 'package:flutter_analyzer/src/parser/parser.dart';
 
-SimpleIdentifierImpl textNode(String value, int offset) {
-  final stringToken = StringToken.fromString(
-    TokenType.STRING,
-    value,
-    offset,
-  );
-  return SimpleIdentifierImpl(stringToken);
-}
-
 extension StringUtils on String {
   bool get isPrivate => this.startsWith('_');
-  SimpleIdentifierImpl toNode(int offset) => textNode(this, offset);
+  SimpleIdentifierImpl toNode(int offset) =>
+      SimpleIdentifierImpl(this.toToken(offset));
   Token toToken(int offset) =>
       StringToken.fromString(TokenType.STRING, this, offset);
 }

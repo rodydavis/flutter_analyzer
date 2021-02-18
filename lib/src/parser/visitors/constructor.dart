@@ -20,7 +20,7 @@ class ConstructorVisitor extends CodeVisitor {
     if (value == null) {
       throw 'Cannot create default constructor';
     }
-    root.name = textNode(value, root.name!.offset);
+    root.name = value.toNode(root.name!.offset);
   }
 
   String get displayName {

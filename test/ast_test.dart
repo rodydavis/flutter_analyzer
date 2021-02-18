@@ -25,14 +25,18 @@ class 1MyClass {}
   test('check flutter source', () {
     const SOURCE_CODE = r'''
 import 'package:flutter/material.dart';
+import 'dart:html';
 
 bool test() => true;
+bool isDebug = true;
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget with You implements Me {
+  MyApp({this.value = 0});
+  final int value;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -70,7 +74,6 @@ mixin You {
     expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
     expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
-    parser.visitor.debug();
   });
 
   test('modify multiple properties', () {
@@ -110,6 +113,12 @@ class MyClass {
   test('test enums', () {
     const SOURCE_CODE = r'''
 enum MyEnum {one, two, three}
+
+class MyClass {
+  MyClass({MyEnum type, this.value = MyEnum.one});
+
+  final MyEnum value;
+}
 ''';
     final parser = FlutterParser.fromString(SOURCE_CODE);
     expect(parser.result.errors.length == 0, equals(true));
@@ -120,5 +129,6 @@ enum MyEnum {one, two, three}
     obj.values[1].name = 'two1';
     expect(obj.name, equals('MyEnum1'));
     expect(obj.values[1].name, equals('two1'));
+    // parser.visitor.debug();
   });
 }

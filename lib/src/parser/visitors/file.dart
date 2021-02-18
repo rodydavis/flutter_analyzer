@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:flutter_analyzer/src/parser/visitors/variable.dart';
 
 import '../parser.dart';
 import '../utils.dart';
@@ -17,6 +18,7 @@ class FileVisitor extends CodeVisitor {
   final List<MixinVisitor> mixins = [];
   final List<EnumVisitor> enums = [];
   final List<ImportVisitor> imports = [];
+  final List<VariableVisitor> fields = [];
   final List<FunctionVisitor> functions = [];
 
   @override
@@ -47,5 +49,35 @@ class FileVisitor extends CodeVisitor {
   void visitFunctionDeclaration(FunctionDeclaration node) {
     functions.add(FunctionVisitor(node, this));
     super.visitFunctionDeclaration(node);
+  }
+
+  @override
+  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+    for (final item in node.variables.variables) {
+      fields.add(VariableVisitor(item, this));
+    }
+    super.visitTopLevelVariableDeclaration(node);
+  }
+
+  void renameEnum(String name, String value) {
+    for (final e in this.enums) {
+      if (e.name == name) {
+        e.name = value;
+      }
+    }
+    for (final c in this.classes) {
+      for (final f in c.fields) {
+        if (f.type == name) {
+          // TODO: Rename fields
+          // f.type = value;
+        }
+      }
+      for (var i in c.constructors) {
+        for (var f in i.fields) {
+          // TODO: Rename fields
+          // f.type = value;
+        }
+      }
+    }
   }
 }
