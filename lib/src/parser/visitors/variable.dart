@@ -5,7 +5,7 @@ import 'expression.dart';
 
 class VariableVisitor extends CodeVisitor {
   VariableVisitor(this.root, this.parent) : super() {
-    if (hasValue) expression = ExpressionVisitor(root.initializer!, this);
+    if (hasValue) expression = ExpressionVisitor.parse(root.initializer!, this);
   }
   final CodeVisitor parent;
   final VariableDeclaration root;

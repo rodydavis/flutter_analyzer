@@ -14,6 +14,15 @@ extension StringUtils on String {
       StringToken.fromString(TokenType.STRING, this, offset);
 }
 
+extension MapUtil on Map {
+  String prettyPrint() {
+    final JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final String prettyprint = encoder.convert(this);
+    print(prettyprint);
+    return prettyprint;
+  }
+}
+
 @mustCallSuper
 abstract class CodeVisitor extends RecursiveAstVisitor<void> {
   CodeVisitor() {
@@ -25,14 +34,15 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
   void debug() {
     final Map<String, dynamic> types = {};
     exploreChildren(types, this.root);
-    final JsonEncoder encoder = JsonEncoder.withIndent('  ');
-    final String prettyprint = encoder.convert(types);
-    print(prettyprint);
+    types.prettyPrint();
   }
 }
 
 exploreChildren(Map<String, dynamic> types, AstNode child) {
-  final key = child.runtimeType.toString();
+  final desc = child.toString().trim();
+  final suffix =
+      '(${(desc.length > 10 ? desc.substring(0, 10) : desc).trim()})';
+  final key = child.runtimeType.toString() + suffix;
   types[key] = Map<String, dynamic>();
   for (final child in child.childEntities) {
     if (child is AstNode) exploreChildren(types[key], child);

@@ -1,14 +1,53 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:flutter_analyzer/src/parser/visitors/file.dart';
 
+import '../../analyzer.dart';
 import '../utils.dart';
 import 'class.dart';
+import 'expression.dart';
+import 'file.dart';
 
-class MethodVisitor extends CodeVisitor {
-  MethodVisitor(this.root, this.parent) : super();
+class FunctionBodyVisitor extends ExpressionScope {
+  FunctionBodyVisitor(this.root, this.parent) : super() {
+    final result = toTree(this.topMethod);
+    print('info -> ${this.topMethod?.name}');
+    result.prettyPrint();
+  }
+
+  static Map<String, dynamic> toTree(MethodCallVisitor? top) {
+    final base = <String, dynamic>{};
+    if (top != null) {
+      base['name'] = top.name;
+      base['params'] = {};
+      for (final arg in top.arguments) {
+        if (arg is NamedExpressionVisitor) {
+          if (arg.root.expression is LiteralImpl) {
+            base['params'][arg.label] = arg.value;
+          } else {
+            base['params'][arg.label] = toTree(arg.topMethod);
+          }
+        }
+      }
+    }
+    return base;
+  }
+
+  final CodeVisitor parent;
+  final FunctionBody root;
+
+  bool get isAsynchronous => this.root.isAsynchronous;
+  bool get isGenerator => this.root.isGenerator;
+  bool get isSynchronous => this.root.isSynchronous;
+  bool get isSynthetic => this.root.isSynthetic;
+}
+
+class MethodVisitor extends ExpressionScope {
+  MethodVisitor(this.root, this.parent) : super() {
+    body = FunctionBodyVisitor(this.root.body, this);
+  }
 
   final ClassVisitor parent;
   final MethodDeclaration root;
+  late FunctionBodyVisitor body;
 
   bool get isGetter => root.isGetter;
   bool get isSetter => root.isSetter;
@@ -23,7 +62,7 @@ class MethodVisitor extends CodeVisitor {
   }
 }
 
-class FunctionVisitor extends CodeVisitor {
+class FunctionVisitor extends ExpressionScope {
   FunctionVisitor(this.root, this.parent) : super();
 
   final FileVisitor parent;
@@ -37,4 +76,26 @@ class FunctionVisitor extends CodeVisitor {
   set name(String value) {
     root.name = value.toNode(root.name.offset);
   }
+}
+
+class MethodCallVisitor extends ExpressionScope {
+  MethodCallVisitor(this.root, this.parent) : super() {
+    for (var e in this.root.argumentList.arguments) {
+      arguments.add(ExpressionVisitor.parse(e, this));
+    }
+  }
+
+  final CodeVisitor parent;
+  final MethodInvocation root;
+  final List<ExpressionVisitor> arguments = [];
+
+  String get name => root.methodName.toString();
+  set name(String value) {
+    root.methodName = value.toNode(root.methodName.offset);
+  }
+
+  bool get isCascaded => root.isCascaded;
+  bool get isNullAware => root.isNullAware;
+  bool get isAssignable => root.isAssignable;
+  bool get isSynthetic => root.isSynthetic;
 }

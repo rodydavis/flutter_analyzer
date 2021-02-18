@@ -51,6 +51,8 @@ class MyApp extends StatelessWidget with You implements Me {
 class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+      // const callback = () {};
+      // callback();
       return Scaffold(
         appBar: AppBar(
           title: Text('Flutter Example'),
@@ -74,6 +76,7 @@ mixin You {
     expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
     expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
+    // parser.visitor.debug();
   });
 
   test('modify multiple properties', () {

@@ -72,7 +72,7 @@ class FieldFormalParameterVisitor extends ConstructorFieldVisitor {
 
 class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
   DefaultFormalParameterVisitor(this.root, this.parent) : super() {
-    if (hasValue) expression = ExpressionVisitor(root.defaultValue!, this);
+    if (hasValue) expression = ExpressionVisitor.parse(root.defaultValue!, this);
   }
   final DefaultFormalParameter root;
   final ConstructorVisitor parent;
@@ -90,7 +90,7 @@ class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
 
 class ConstructorFieldInitializerVisitor extends CodeVisitor {
   ConstructorFieldInitializerVisitor(this.root, this.parent) : super() {
-    expression = ExpressionVisitor(root.expression, this);
+    expression = ExpressionVisitor.parse(root.expression, this);
   }
   final ConstructorFieldInitializer root;
   final ConstructorVisitor parent;
