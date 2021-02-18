@@ -21,18 +21,6 @@ class VariableVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    for (final c in parent.parent.constructors) {
-      for (final f in c.fields) {
-        if (f.name == name) {
-          f.name = value;
-        }
-      }
-      for (final f in c.initializers) {
-        if (f.name == name) {
-          f.name = value;
-        }
-      }
-    }
     root.name = textNode(value, root.name.offset);
   }
 }

@@ -4,9 +4,7 @@ import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
-import 'package:flutter/material.dart';
 
-import 'utils.dart';
 import 'visitors/file.dart';
 
 class FlutterParser {
@@ -21,7 +19,6 @@ class FlutterParser {
 
   final String code;
   late FileVisitor visitor;
-
 
   /// Dart Parse String Result
   late ParseStringResult result;

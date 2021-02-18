@@ -5,6 +5,7 @@ import 'comment.dart';
 import 'constructor.dart';
 import 'field.dart';
 import 'file.dart';
+import 'method.dart';
 
 class ClassVisitor extends CodeVisitor {
   ClassVisitor(this.root, this.parent) : super() {
@@ -32,10 +33,8 @@ class ClassVisitor extends CodeVisitor {
   bool get isPrivate => name.startsWith('_');
 
   final List<FieldVisitor> fields = [];
-  bool get hasFields => fields.isNotEmpty;
-
   final List<ConstructorVisitor> constructors = [];
-  bool get hasConstructor => constructors.isNotEmpty;
+  final List<MethodVisitor> methods = [];
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
@@ -49,8 +48,31 @@ class ClassVisitor extends CodeVisitor {
     super.visitFieldDeclaration(node);
   }
 
-  // @override
-  // void visitMethodDeclaration(MethodDeclaration node) {
-  //   super.visitMethodDeclaration(node);
-  // }
+  @override
+  void visitMethodDeclaration(MethodDeclaration node) {
+    methods.add(MethodVisitor(node, this));
+    super.visitMethodDeclaration(node);
+  }
+
+  void renameVariable(String name, String value) {
+    for (final c in this.constructors) {
+      for (final f in c.fields) {
+        if (f.name == name) {
+          f.name = value;
+        }
+      }
+      for (final f in c.initializers) {
+        if (f.name == name) {
+          f.name = value;
+        }
+      }
+    }
+    for (final f in this.fields) {
+      for (var v in f.variables) {
+        if (v.name == name) {
+          v.name = value;
+        }
+      }
+    }
+  }
 }

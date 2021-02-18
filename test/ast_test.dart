@@ -26,6 +26,8 @@ class 1MyClass {}
     const SOURCE_CODE = r'''
 import 'package:flutter/material.dart';
 
+bool test() => true;
+
 void main() {
   runApp(MyApp());
 }
@@ -68,6 +70,7 @@ mixin You {
     expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
     expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
+    parser.visitor.debug();
   });
 
   test('modify multiple properties', () {
@@ -94,8 +97,8 @@ class MyClass {
     expect(fieldB.name, equals('b'));
     obj.name = 'MyClass1';
     value.name = 'value0';
-    fieldA.name = 'a1';
-    fieldB.name = 'b1';
+    obj.renameVariable('a', 'a1');
+    obj.renameVariable('b', 'b1');
     obj.constructors[1].name = 'about';
     expect(obj.name, equals('MyClass1'));
     expect(obj.constructors[1].name, equals('about'));
