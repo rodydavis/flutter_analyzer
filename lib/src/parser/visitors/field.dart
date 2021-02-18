@@ -1,18 +1,18 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:flutter_analyzer/src/parser/visitors/class.dart';
 
-import '../parser.dart';
 import '../utils.dart';
 import 'comment.dart';
 import 'variable.dart';
 
 class FieldVisitor extends CodeVisitor {
-  FieldVisitor(this.root, this.parser) {
+  FieldVisitor(this.root, this.parent) {
     this.root.visitChildren(this);
     if (root.documentationComment != null) {
-      this.comment = CommentVisitor(root.documentationComment!, this.parser);
+      this.comment = CommentVisitor(root.documentationComment!, this);
     }
   }
-  final FlutterParser parser;
+  final ClassVisitor parent;
   final FieldDeclaration root;
   CommentVisitor? comment;
 
@@ -27,7 +27,6 @@ class FieldVisitor extends CodeVisitor {
 
   bool get isOptional => root.fields.type?.question != null;
 
-  List<VariableVisitor> get variables => root.fields.variables
-      .map((e) => VariableVisitor(e, this.parser))
-      .toList();
+  List<VariableVisitor> get variables =>
+      root.fields.variables.map((e) => VariableVisitor(e, this)).toList();
 }

@@ -1,6 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
 
-import '../parser.dart';
 import '../utils.dart';
 import 'class.dart';
 
@@ -12,7 +11,7 @@ class ConstructorVisitor extends CodeVisitor {
   final ClassVisitor parent;
 
   bool get hasName => name != null;
-  
+
   String? get name => root.name?.toString();
   set name(String? value) {
     if (value == null) {

@@ -1,12 +1,11 @@
 import 'package:analyzer/dart/ast/ast.dart';
 
-import '../parser.dart';
 import '../utils.dart';
 
 class ExpressionVisitor extends CodeVisitor {
-  ExpressionVisitor(this.root, this.parser) {
+  ExpressionVisitor(this.root, this.parent) {
     this.root.visitChildren(this);
   }
   final Expression root;
-  final FlutterParser parser;
+  final CodeVisitor parent;
 }

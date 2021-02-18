@@ -1,19 +1,21 @@
 import 'package:analyzer/dart/ast/ast.dart';
 
-import '../parser.dart';
 import '../utils.dart';
 import 'comment.dart';
 import 'constructor.dart';
 import 'field.dart';
+import 'file.dart';
 
 class ClassVisitor extends CodeVisitor {
-  ClassVisitor(this.root, this.parser) {
+  ClassVisitor(this.root, this.parent) {
     this.root.visitChildren(this);
     if (root.documentationComment != null) {
-      this.comment = CommentVisitor(root.documentationComment!, this.parser);
+      this.comment = CommentVisitor(root.documentationComment!, this);
     }
   }
-  final FlutterParser parser;
+
+  final FileVisitor parent;
+
   final ClassDeclaration root;
   CommentVisitor? comment;
 
@@ -23,7 +25,7 @@ class ClassVisitor extends CodeVisitor {
   }
 
   bool get isPrivate => name.startsWith('_');
-  
+
   final List<FieldVisitor> fields = [];
   bool get hasFields => fields.isNotEmpty;
 
@@ -38,7 +40,7 @@ class ClassVisitor extends CodeVisitor {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    fields.add(FieldVisitor(node, this.parser));
+    fields.add(FieldVisitor(node, this));
     super.visitFieldDeclaration(node);
   }
 }

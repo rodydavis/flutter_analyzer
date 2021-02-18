@@ -1,10 +1,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 
-import '../parser.dart';
 import '../utils.dart';
 
 class CommentVisitor extends CodeVisitor {
-  CommentVisitor(this.root, this.parser) {
+  CommentVisitor(this.root, this.parent) {
     this.root.visitChildren(this);
     for (final token in this.root.tokens) {
       final String value = token.value().toString().trimLeft();
@@ -22,7 +21,7 @@ class CommentVisitor extends CodeVisitor {
     }
   }
 
-  final FlutterParser parser;
+  final CodeVisitor parent;
   final Comment root;
   final List<String> lines = [];
   String get content => lines.join('\n');

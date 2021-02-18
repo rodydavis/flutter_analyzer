@@ -6,12 +6,11 @@ import 'expression.dart';
 
 class VariableVisitor extends CodeVisitor {
   ExpressionVisitor? expression;
-  VariableVisitor(this.root, this.parser) {
+  VariableVisitor(this.root, this.parent) {
     this.root.visitChildren(this);
-    if (hasValue)
-      expression = ExpressionVisitor(root.initializer!, this.parser);
+    if (hasValue) expression = ExpressionVisitor(root.initializer!, this);
   }
-  final FlutterParser parser;
+  final CodeVisitor parent;
   final VariableDeclaration root;
   bool get isLate => root.isLate;
   bool get isFinal => root.isFinal;
@@ -23,10 +22,5 @@ class VariableVisitor extends CodeVisitor {
   String get name => root.name.toString();
   set name(String value) {
     root.name = textNode(value, root.name.offset);
-  }
-
-  @override
-  String toString() {
-    return '$name -> isLate:$isLate,isFinal:$isFinal,isConst:$isConst,isPrivate:$isPrivate,hasValue:$hasValue';
   }
 }

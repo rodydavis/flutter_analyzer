@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:flutter_analyzer/src/analyzer.dart';
 import 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
+import 'package:flutter_analyzer/src/parser/parser.dart';
 
 SimpleIdentifierImpl textNode(String value, int offset) {
   final stringToken = StringToken.fromString(
@@ -23,4 +24,4 @@ extension StringUtils on String {
   SimpleIdentifierImpl toNode(int offset) => textNode(this, offset);
 }
 
-class CodeVisitor extends RecursiveAstVisitor<void> {}
+abstract class CodeVisitor extends RecursiveAstVisitor<void> {}

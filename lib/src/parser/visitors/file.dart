@@ -5,14 +5,14 @@ import '../utils.dart';
 import 'class.dart';
 
 class FileVisitor extends CodeVisitor {
-  FileVisitor(this.parser);
+  FileVisitor(this.parent);
 
-  final FlutterParser parser;
+  final FlutterParser parent;
   final List<ClassVisitor> classes = [];
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    classes.add(ClassVisitor(node, this.parser));
+    classes.add(ClassVisitor(node, this));
     super.visitClassDeclaration(node);
   }
 }
