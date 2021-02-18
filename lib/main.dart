@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'src/parser.dart';
+import 'src/controller.dart';
+import 'src/default.dart';
+import 'src/parser/parser.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Analyzer',
-      theme: ThemeData.light(),
+      theme: ThemeData.dark(),
       home: FlutterExample(),
     );
   }
@@ -33,7 +35,6 @@ class FlutterExample extends StatefulWidget {
 
 // Simple Comment
 class _FlutterExampleState extends State<FlutterExample> {
-  late FlutterParser _parser;
   String? _value;
 
   /// Comment on a field
@@ -41,7 +42,16 @@ class _FlutterExampleState extends State<FlutterExample> {
 
   /// Comment on field 2
   bool? a, b = true;
-  final _controller = TextEditingController();
+  final _controller = DartController();
+  final _selection = ValueNotifier<CodeSelection?>(null);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = DEFAULT_CODE;
+    final _parser = FlutterParser.fromString(DEFAULT_CODE);
+    // print(_parser.formatted());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,19 +65,58 @@ class _FlutterExampleState extends State<FlutterExample> {
           ),
         ],
       ),
-      body: TextField(
-        maxLength: null,
-        maxLines: null,
-        controller: _controller,
-        onEditingComplete: this.save,
+      body: NotificationListener<CodeSelection>(
+        onNotification: (selection) {
+          print('selection: ${selection.value}');
+          final controller = ScaffoldMessenger.of(context);
+          controller.hideCurrentSnackBar();
+          controller.showSnackBar(SnackBar(content: Text(selection.value())));
+          _selection.value = selection;
+          return true;
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                maxLength: null,
+                maxLines: null,
+                controller: _controller,
+                onEditingComplete: this.save,
+              ),
+            ),
+            Container(
+              width: 400,
+              child: ValueListenableBuilder<CodeSelection?>(
+                valueListenable: _selection,
+                builder: (context, selection, child) {
+                  return selection == null
+                      ? CircularProgressIndicator()
+                      : Form(
+                          key: UniqueKey(),
+                          child: Column(
+                            children: [
+                              if (selection is CodeSelection<String>)
+                                TextFormField(
+                                  initialValue: selection.value(),
+                                  onChanged: (val) {
+                                    if (val.isEmpty) return;
+                                    selection.onChanged(val);
+                                  },
+                                ),
+                            ],
+                          ),
+                        );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   void save() {
-    this._parser = FlutterParser.fromString(_controller.text);
-    this._parser.debug();
-    this._controller.text = this._parser.formatted;
+    _controller.update();
   }
 }
 
