@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'src/controller.dart';
 import 'src/default.dart';
+import 'src/formatter.dart';
 import 'src/parser/parser.dart';
 
 void main() {
@@ -36,22 +37,21 @@ class FlutterExample extends StatefulWidget {
 
 // Simple Comment
 class _FlutterExampleState extends State<FlutterExample> {
-  String? _value;
-
-  /// Comment on a field
-  String? value;
-
-  /// Comment on field 2
-  bool? a, b = true;
+  FlutterParser? parser;
   final _controller = DartController();
-  final _selection = ValueNotifier<CodeSelection?>(null);
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     _controller.text = DEFAULT_CODE;
-    final _parser = FlutterParser.fromString(DEFAULT_CODE);
-    // print(_parser.formatted());
+    _controller.addListener(_update);
+    this._update();
+  }
+
+  void _update() {
+    parser = _controller.parser;
+    if (mounted && parser != null) setState(() {});
   }
 
   @override
@@ -62,62 +62,65 @@ class _FlutterExampleState extends State<FlutterExample> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: this.save,
+            onPressed: ready ? this.save : null,
           ),
         ],
       ),
-      body: NotificationListener<CodeSelection>(
-        onNotification: (selection) {
-          print('selection: ${selection.value}');
-          final controller = ScaffoldMessenger.of(context);
-          controller.hideCurrentSnackBar();
-          controller.showSnackBar(SnackBar(content: Text(selection.value())));
-          _selection.value = selection;
-          return true;
-        },
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                maxLength: null,
-                maxLines: null,
-                controller: _controller,
-                onEditingComplete: this.save,
-              ),
+      body: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              maxLength: null,
+              maxLines: null,
+              controller: _controller,
+              onEditingComplete: this.save,
             ),
-            Container(
-              width: 400,
-              child: ValueListenableBuilder<CodeSelection?>(
-                valueListenable: _selection,
-                builder: (context, selection, child) {
-                  return selection == null
-                      ? CircularProgressIndicator()
-                      : Form(
-                          key: UniqueKey(),
-                          child: Column(
-                            children: [
-                              if (selection is CodeSelection<String>)
-                                TextFormField(
-                                  initialValue: selection.value(),
-                                  onChanged: (val) {
-                                    if (val.isEmpty) return;
-                                    selection.onChanged(val);
-                                  },
-                                ),
-                            ],
-                          ),
-                        );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+          Container(
+            width: 400,
+            child: !ready
+                ? CircularProgressIndicator()
+                : Form(
+                    key: _formKey,
+                    child: ListView(
+                      children: [
+                        for (final item in parser!.visitor.classes)
+                          _buildClassSettings(context, item),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
 
+  Widget _buildClassSettings(BuildContext context, ClassVisitor visitor) {
+    return Column(
+      children: [
+        TextFormField(
+          initialValue: visitor.name,
+          validator: (val) {
+            if (val == null) return 'must contain a value';
+            return null;
+          },
+          onSaved: (val) {
+            visitor.name = val!;
+            print('visitor.name ${visitor.name} ${val}');
+          },
+        ),
+      ],
+    );
+  }
+
+  bool get ready => parser != null;
   void save() {
-    _controller.update();
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      final src = parser!.toSource();
+      print(src);
+      _controller.text = Formatter(src).format();
+    }
   }
 }
 

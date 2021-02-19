@@ -12,8 +12,10 @@ class DartController extends TextEditingController {
   }) : super() {
     this.theme = theme ??= SyntaxTheme.dracula();
   }
-  late DartHighlighter highlighter;
   late SyntaxTheme theme;
+  DartHighlighter? get highlighter =>
+      parser == null ? null : DartHighlighter(parser!, this.theme, this);
+  FlutterParser? parser;
 
   @override
   TextSpan buildTextSpan({
@@ -21,30 +23,24 @@ class DartController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) =>
-      highlighter.toTextSpan(
-        context: context,
-        style: style,
-        withComposing: withComposing,
-      );
+      highlighter != null
+          ? highlighter!.toTextSpan(
+              context: context,
+              style: style,
+              withComposing: withComposing,
+            )
+          : super.buildTextSpan(context: context, withComposing: withComposing);
 
   @override
   set text(String newText) {
-    super.text = this.analyze(newText);
+    super.text = newText;
+    this.analyze(newText);
+  }
+
+  void analyze(String val) {
+    final formatted = Formatter(val).format();
+    parser = FlutterParser.fromString(formatted);
     super.notifyListeners();
-  }
-
-  String analyze(String val) {
-    final parser = FlutterParser.fromString(val);
-    highlighter = DartHighlighter(parser, this.theme, this);
-    final src = parser.toSource();
-    final formatter = Formatter(src);
-    return formatter.format();
-  }
-
-  void update() {
-    // highlighter.parser.update();
-    this.text = highlighter.parser.code;
-    // print('this.text: ${this.text}');
   }
 }
 
