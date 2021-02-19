@@ -82,7 +82,7 @@ class FlutterParser {
   @visibleForTesting
   void debug() {
     // ignore: invalid_use_of_visible_for_testing_member
-    // this.visitor.debug(this.code);
+    this.visitor.debug(this.code);
     print(this.toSource());
   }
 }

@@ -72,7 +72,6 @@ class MyClass {
       parser.renameClass('MyClass', 'MyClass1');
       expect(obj.constructors[0].name, equals(null));
       expect(obj.name, equals('MyClass1'));
-      parser.debug();
     });
   });
 
@@ -172,6 +171,7 @@ mixin You {
       expect(parser.visitor.classes[0].withClause, equals(['You']));
       expect(parser.visitor.classes[1].name, equals('MyWidget'));
       // TODO: Check for "const callback = () {};callback(); return Scaffold(();""
+      parser.debug();
     });
   });
 }
