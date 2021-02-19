@@ -7,6 +7,8 @@ import 'package:analyzer/source/line_info.dart';
 
 import 'visitors/file.dart';
 
+export  'visitors/file.dart';
+
 class FlutterParser {
   FlutterParser.fromString(this.code) {
     this.result = parseString(

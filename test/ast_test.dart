@@ -76,7 +76,7 @@ mixin You {
     expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
     expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
-    // parser.visitor.debug();
+    parser.visitor.debug();
   });
 
   test('modify multiple properties', () {

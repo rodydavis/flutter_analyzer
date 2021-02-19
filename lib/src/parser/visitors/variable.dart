@@ -22,4 +22,23 @@ class VariableVisitor extends CodeVisitor {
   set name(String value) {
     root.name = value.toNode(root.name.offset);
   }
+
+  @override
+  String get visitorName => 'variable';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'isLate': isLate,
+        'isFinal': isFinal,
+        'isConst': isConst,
+        'isSynthetic': isSynthetic,
+        'isPrivate': isPrivate,
+        'expression': expression?.toJson(),
+        'name': name,
+      }
+    };
+  }
 }

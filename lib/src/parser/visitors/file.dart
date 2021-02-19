@@ -3,17 +3,25 @@ import 'package:flutter_analyzer/src/parser/visitors/variable.dart';
 
 import '../parser.dart';
 import '../utils.dart';
+
 import 'class.dart';
 import 'enum.dart';
 import 'import.dart';
 import 'method.dart';
 import 'mixin.dart';
 
+export 'class.dart';
+export 'enum.dart';
+export 'method.dart';
+export 'import.dart';
+export 'mixin.dart';
+
 class FileVisitor extends CodeVisitor {
   FileVisitor(this.root, this.parent) : super();
 
   final CompilationUnit root;
   final FlutterParser parent;
+
   final List<ClassVisitor> classes = [];
   final List<MixinVisitor> mixins = [];
   final List<EnumVisitor> enums = [];
@@ -59,6 +67,26 @@ class FileVisitor extends CodeVisitor {
     super.visitTopLevelVariableDeclaration(node);
   }
 
+  @override
+  String get visitorName => 'compilation_unit';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'classes': classes.map((e) => e.toJson()).toList(),
+        'mixins': mixins.map((e) => e.toJson()).toList(),
+        'enums': enums.map((e) => e.toJson()).toList(),
+        'imports': imports.map((e) => e).toList(),
+        'fields': fields.map((e) => e).toList(),
+        'functions': functions,
+      }
+    };
+  }
+}
+
+extension FileVisitorUtil on FileVisitor {
   void renameEnum(String name, String value) {
     for (final e in this.enums) {
       if (e.name == name) {

@@ -50,6 +50,23 @@ class ConstructorVisitor extends CodeVisitor {
     initializers.add(ConstructorFieldInitializerVisitor(node, this));
     super.visitConstructorFieldInitializer(node);
   }
+
+  @override
+  String get visitorName => 'constructor_declaration';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'name': name,
+        'displayName': displayName,
+        'position': position,
+        'fields': fields.map((e) => e.toJson()).toList(),
+        'initializers': initializers.map((e) => e.toJson()).toList(),
+      }
+    };
+  }
 }
 
 class FieldFormalParameterVisitor extends ConstructorFieldVisitor {
@@ -68,11 +85,27 @@ class FieldFormalParameterVisitor extends ConstructorFieldVisitor {
     final identifier = root.identifier;
     identifier.token = value.toToken(identifier.offset);
   }
+
+  @override
+  String get visitorName => 'field_formal';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'name': name,
+        'type': type,
+        'position': position,
+      }
+    };
+  }
 }
 
 class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
   DefaultFormalParameterVisitor(this.root, this.parent) : super() {
-    if (hasValue) expression = ExpressionVisitor.parse(root.defaultValue!, this);
+    if (hasValue)
+      expression = ExpressionVisitor.parse(root.defaultValue!, this);
   }
   final DefaultFormalParameter root;
   final ConstructorVisitor parent;
@@ -86,6 +119,20 @@ class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
 
   ExpressionVisitor? expression;
   bool get hasValue => root.defaultValue != null;
+
+  @override
+  String get visitorName => 'field_formal_default';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'name': name,
+        'expression': expression?.toJson(),
+      }
+    };
+  }
 }
 
 class ConstructorFieldInitializerVisitor extends CodeVisitor {
@@ -101,6 +148,20 @@ class ConstructorFieldInitializerVisitor extends CodeVisitor {
     if (value == null) return;
     final identifier = root.fieldName;
     identifier.token = value.toToken(identifier.offset);
+  }
+
+  @override
+  String get visitorName => 'field_initializer';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'name': name,
+        'expression': expression.toJson(),
+      }
+    };
   }
 }
 
@@ -118,4 +179,24 @@ abstract class ConstructorFieldVisitor extends CodeVisitor {
   String? get name;
   set name(String? value);
   bool? get isPrivate => name?.startsWith('_');
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': 'field',
+      'params': {
+        'isConst': isConst,
+        'isFinal': isFinal,
+        'isNamed': isNamed,
+        'isOptional': isOptional,
+        'isPositional': isPositional,
+        'isRequired': isRequired,
+        'isRequiredNamed': isRequiredNamed,
+        'isRequiredPositional': isRequiredPositional,
+        'isSynthetic': isSynthetic,
+        'isPrivate': isPrivate,
+        'name': name,
+      }
+    };
+  }
 }

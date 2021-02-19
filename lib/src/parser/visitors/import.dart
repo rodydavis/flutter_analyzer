@@ -21,4 +21,19 @@ class ImportVisitor extends CodeVisitor {
       this.root.prefix = value.toNode(this.root.prefix?.offset ?? 0);
     }
   }
+
+  @override
+  String get visitorName => 'import';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'url': url,
+        'prefix': prefix,
+        'deferred': deferred,
+      }
+    };
+  }
 }

@@ -8,4 +8,15 @@ class MixinVisitor extends CodeVisitor {
 
   final MixinDeclaration root;
   final FileVisitor parent;
+
+  @override
+  String get visitorName => 'mixin';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {},
+    };
+  }
 }

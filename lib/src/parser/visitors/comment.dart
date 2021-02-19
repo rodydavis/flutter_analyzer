@@ -34,4 +34,21 @@ class CommentVisitor extends CodeVisitor {
   bool get isEndOfLine => root.isEndOfLine;
   bool get isSynthetic => root.isSynthetic;
   NodeList<CommentReference> get references => root.references;
+
+  @override
+  String get visitorName => 'comment';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'lines': lines,
+        'isBlock': isBlock,
+        'isDocumentation': isDocumentation,
+        'isEndOfLine': isEndOfLine,
+        'isSynthetic': isSynthetic,
+      },
+    };
+  }
 }

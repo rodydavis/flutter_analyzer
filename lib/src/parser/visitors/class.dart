@@ -31,6 +31,8 @@ class ClassVisitor extends CodeVisitor {
       root.implementsClause?.interfaces.map((e) => e.toString()).toList();
 
   bool get isPrivate => name.startsWith('_');
+  bool get isAbstract => root.isAbstract;
+  bool get isSynthetic => root.isSynthetic;
 
   final List<FieldVisitor> fields = [];
   final List<ConstructorVisitor> constructors = [];
@@ -54,6 +56,30 @@ class ClassVisitor extends CodeVisitor {
     super.visitMethodDeclaration(node);
   }
 
+  @override
+  String get visitorName => 'class_declaration';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'name': name,
+        'fields': fields.map((e) => e.toJson()).toList(),
+        'constructors': constructors.map((e) => e.toJson()).toList(),
+        'methods': methods.map((e) => e.toJson()).toList(),
+        'withClause': withClause?.map((e) => e).toList(),
+        'implementsClause': implementsClause?.map((e) => e).toList(),
+        'isPrivate': isPrivate,
+        'extendsClause': extendsClause,
+        'isAbstract': isAbstract,
+        'isSynthetic': isSynthetic,
+      }
+    };
+  }
+}
+
+extension ClassVisitorUtils on ClassVisitor {
   void renameVariable(String name, String value) {
     for (final c in this.constructors) {
       for (final f in c.fields) {

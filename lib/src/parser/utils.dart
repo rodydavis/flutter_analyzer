@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_analyzer/src/analyzer.dart';
-import 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
-import 'package:flutter_analyzer/src/parser/parser.dart';
+
+import '../analyzer.dart';
 
 extension StringUtils on String {
   bool get isPrivate => this.startsWith('_');
@@ -14,7 +14,7 @@ extension StringUtils on String {
       StringToken.fromString(TokenType.STRING, this, offset);
 }
 
-extension MapUtil on Map {
+extension on Object {
   String prettyPrint() {
     final JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final String prettyprint = encoder.convert(this);
@@ -32,10 +32,16 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
 
   @visibleForTesting
   void debug() {
-    final Map<String, dynamic> types = {};
-    exploreChildren(types, this.root);
-    types.prettyPrint();
+    // final Map<String, dynamic> types = {};
+    // exploreChildren(types, this.root);
+    // types.prettyPrint();
+    final Map output = this.toJson();
+    output.prettyPrint();
   }
+
+  String get visitorName;
+
+  dynamic toJson();
 }
 
 exploreChildren(Map<String, dynamic> types, AstNode child) {

@@ -15,6 +15,9 @@ class ExpressionVisitor extends ExpressionScope {
     }
     return ExpressionVisitor(root, parent);
   }
+
+  @override
+  String get visitorName => 'expression';
 }
 
 class NamedExpressionVisitor extends ExpressionVisitor {
@@ -29,6 +32,21 @@ class NamedExpressionVisitor extends ExpressionVisitor {
   }
 
   dynamic get value => this.root.expression.toString();
+
+  @override
+  String get visitorName => 'named_expression';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'methods': methods.map((e) => e.toJson()).toList(),
+        'value': value,
+        'label': label,
+      },
+    };
+  }
 }
 
 abstract class ExpressionScope extends CodeVisitor {
@@ -40,5 +58,15 @@ abstract class ExpressionScope extends CodeVisitor {
   void visitMethodInvocation(MethodInvocation node) {
     methods.add(MethodCallVisitor(node, lastMethod ?? this));
     super.visitMethodInvocation(node);
+  }
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'methods': methods.map((e) => e.toJson()).toList(),
+      },
+    };
   }
 }

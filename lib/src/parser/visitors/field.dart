@@ -32,4 +32,21 @@ class FieldVisitor extends CodeVisitor {
   void renameVariable(String name, String value) {
     parent.renameVariable(name, value);
   }
+
+  @override
+  String get visitorName => 'field';
+
+  @override
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'params': {
+        'isOptional': isOptional,
+        'isStatic': isStatic,
+        'type': type,
+        'typeName': typeName,
+        'variables': variables.map((e) => e.toJson()).toList(),
+      },
+    };
+  }
 }
