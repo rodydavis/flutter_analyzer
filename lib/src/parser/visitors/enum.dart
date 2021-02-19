@@ -7,7 +7,7 @@ class EnumVisitor extends CodeVisitor {
   final EnumDeclaration root;
 
   String get name => root.name.toString();
-  set name(String value) {
+  set _name(String value) {
     root.name = value.toNode(root.name.offset);
   }
 
@@ -33,7 +33,7 @@ class EnumValueVisitor extends CodeVisitor {
   EnumValueVisitor(this.root, this.parent) : super();
 
   String get name => root.name.toString();
-  set name(String value) {
+  set _name(String value) {
     root.name = value.toNode(root.name.offset);
   }
 

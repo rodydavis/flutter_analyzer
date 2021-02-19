@@ -13,7 +13,7 @@ class ClassVisitor extends CodeVisitor {
   CommentVisitor? comment;
 
   String get name => root.name.toString();
-  set name(String value) {
+  set _name(String value) {
     root.name = value.toNode(root.name.offset);
   }
 
@@ -66,4 +66,3 @@ class ClassVisitor extends CodeVisitor {
         'isSynthetic': isSynthetic,
       };
 }
-

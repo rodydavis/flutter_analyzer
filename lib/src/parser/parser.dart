@@ -7,6 +7,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:analyzer/src/dart/ast/ast.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_analyzer/src/analyzer.dart';
 
 import 'utils.dart';
 
@@ -20,6 +22,7 @@ part 'visitors/file.dart';
 part 'visitors/import.dart';
 part 'visitors/method.dart';
 part 'visitors/mixin.dart';
+part 'visitors/refactor.dart';
 part 'visitors/types.dart';
 part 'visitors/variable.dart';
 
@@ -56,40 +59,30 @@ class FlutterParser {
   @override
   String toString() => this.code;
 
-  void renameVariable(String name, String value) {
-    for (var ctx in visitor.classes) {
-      for (final c in ctx.constructors) {
-        for (final f in c.fields) {
-          if (f.name == name) {
-            f.name = value;
-          }
-        }
-        for (final f in c.initializers) {
-          if (f.name == name) {
-            f.name = value;
-          }
-        }
-      }
-      for (final f in ctx.fields) {
-        for (var v in f.variables) {
-          if (v.name == name) {
-            v.name = value;
-          }
-        }
-      }
-    }
+  void renameClass(String oldVal, String newVal) {
+    _rename(RefactorVisitor.className(oldVal, newVal));
   }
 
-  void renameClass(String name, String value) {
-    for (var ctx in visitor.classes) {
-      if (ctx.name == name) {
-        ctx.name = value;
-      }
-      for (final c in ctx.constructors) {
-        if (c.name == name) {
-          c.name = value;
-        }
-      }
-    }
+  void renameEnum(String oldVal, String newVal) {
+    _rename(RefactorVisitor.enumName(oldVal, newVal));
+  }
+
+  void renameEnumVal(String enumName, String oldVal, String newVal) {
+    _rename(RefactorVisitor.enumValue(oldVal, newVal, enumName));
+  }
+
+  void renameVariable(String className, String oldVal, String newVal) {
+    _rename(RefactorVisitor.variableName(oldVal, newVal, className));
+  }
+
+  void _rename(RefactorVisitor refactor) {
+    this.root.visitChildren(refactor);
+  }
+
+  @visibleForTesting
+  void debug() {
+    // ignore: invalid_use_of_visible_for_testing_member
+    this.visitor.debug(this.code);
+    print(this.toSource());
   }
 }

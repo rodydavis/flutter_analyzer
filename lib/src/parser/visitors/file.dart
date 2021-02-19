@@ -27,6 +27,7 @@ class FileVisitor extends CodeVisitor {
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
+    mixins.add(MixinVisitor(node, this));
     super.visitMixinDeclaration(node);
   }
 
@@ -62,28 +63,4 @@ class FileVisitor extends CodeVisitor {
         'fields': fields.map((e) => e).toList(),
         'functions': functions,
       };
-}
-
-extension FileVisitorUtil on FileVisitor {
-  void renameEnum(String name, String value) {
-    for (final e in this.enums) {
-      if (e.name == name) {
-        e.name = value;
-      }
-    }
-    for (final c in this.classes) {
-      for (final f in c.fields) {
-        if (f.type == name) {
-          // TODO: Rename fields
-          // f.type = value;
-        }
-      }
-      for (var i in c.constructors) {
-        for (var f in i.fields) {
-          // TODO: Rename fields
-          // f.type = value;
-        }
-      }
-    }
-  }
 }

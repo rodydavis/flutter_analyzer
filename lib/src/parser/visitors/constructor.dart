@@ -8,8 +8,11 @@ class ConstructorVisitor extends CodeVisitor {
 
   bool get hasName => name != null;
 
+  String? get redirectedConstructor =>
+      root.redirectedConstructor?.name.toString();
+
   String? get name => root.name?.toString();
-  set name(String? value) {
+  set _name(String? value) {
     if (name == null) {
       throw 'Cannot rename default constructor';
     }
