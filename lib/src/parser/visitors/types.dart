@@ -121,6 +121,35 @@ class PrefixedVisitor extends LiteralVisitor<String> {
       };
 }
 
+class InstanceCreationExpressionVisitor extends LiteralVisitor<String> {
+  InstanceCreationExpressionVisitor(this.root, this.parent)
+      : super(root, parent);
+
+  final List<ExpressionVisitor> arguments = [];
+
+  @override
+  final CodeVisitor parent;
+
+  @override
+  final InstanceCreationExpressionImpl root;
+
+  @override
+  String get value => root.constructorName.name.toString();
+  set value(String val) {
+    if (root.constructorName.name == null) return;
+    root.constructorName.name!.token = val.toToken(root.offset);
+  }
+
+  @override
+  String get visitorName => 'instance_creation';
+
+  @override
+  Map<String, dynamic> get params => {
+        'name': value,
+        'arguments': arguments.map((e) => e.toJson()).toList(),
+      };
+}
+
 class MethodInvocationVisitor extends LiteralVisitor<String> {
   MethodInvocationVisitor(this.root, this.parent) : super(root, parent) {
     for (final child in root.argumentList.arguments) {
@@ -141,6 +170,9 @@ class MethodInvocationVisitor extends LiteralVisitor<String> {
   set value(String val) {
     root.methodName.token = val.toToken(root.offset);
   }
+
+  @override
+  String get visitorName => 'method_invocation';
 
   @override
   Map<String, dynamic> get params => {

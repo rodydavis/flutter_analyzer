@@ -25,6 +25,9 @@ class ExpressionVisitor extends ExpressionScope {
     if (root is MethodInvocationImpl) {
       return MethodInvocationVisitor(root, parent);
     }
+    if (root is InstanceCreationExpressionImpl) {
+      return InstanceCreationExpressionVisitor(root, parent);
+    }
     if (root is PrefixedIdentifierImpl) {
       return PrefixedVisitor(root, parent);
     }

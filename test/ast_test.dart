@@ -13,6 +13,8 @@ class MyClass {
   int a = 0;
   int b = 0;
 }
+
+final value = new MyClass();
 ''';
     final parser = FlutterParser.fromString(SOURCE_CODE);
     final obj = parser.visitor.classes[0];
@@ -41,6 +43,35 @@ class MyClass {
       expect(value.name, equals('value0'));
       expect(fieldA.name, equals('a1'));
       expect(fieldB.name, equals('b1'));
+    });
+  });
+
+  group('methods', () {
+    const SOURCE_CODE = r'''
+class MyClass {
+  MyClass({this.child});
+  final MyClass? child;
+
+  MyClass? build() {
+    return MyClass(
+      child: MyClass(),
+    );
+  }
+}
+''';
+    final parser = FlutterParser.fromString(SOURCE_CODE);
+    final obj = parser.visitor.classes[0];
+
+    test('error check', () {
+      expect(parser.result.errors.length == 0, equals(true));
+      expect(parser.visitor.classes.length, equals(1));
+    });
+
+    test('rename class', () {
+      expect(obj.name, equals('MyClass'));
+      parser.renameClass('MyClass', 'MyClass1');
+      expect(obj.constructors[0].name, equals(null));
+      expect(obj.name, equals('MyClass1'));
       parser.debug();
     });
   });

@@ -70,17 +70,25 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (scope == RenameScope.METHOD && sameScope) {
-      rename(node.name);
-    }
+    if (scope == RenameScope.METHOD && sameScope) rename(node.name);
+    if (scope == RenameScope.CLASS) rename(node.name);
     super.visitMethodDeclaration(node);
   }
 
   @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (scope == RenameScope.METHOD && sameScope) {
-      rename(node.methodName);
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (scope == RenameScope.CLASS &&
+        node.constructorName.type.name.toString() == current) {
+      node.constructorName.type.name =
+          replacement.toNode(node.constructorName.type.name.offset);
     }
+    super.visitInstanceCreationExpression(node);
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (scope == RenameScope.METHOD && sameScope) rename(node.methodName);
+    if (scope == RenameScope.CLASS) rename(node.methodName);
     super.visitMethodInvocation(node);
   }
 
@@ -93,7 +101,24 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (scope == RenameScope.METHOD) rename(node.name);
+    if (scope == RenameScope.CLASS && node.returnType.toString() == current) {
+      if (node.returnType != null) {
+        node.returnType =
+            TypeNameImpl(replacement.toNode(node.returnType!.offset), null);
+      }
+    }
     super.visitFunctionDeclaration(node);
+  }
+
+  @override
+  void visitTypeName(TypeName node) {
+    if (scope == RenameScope.ENUM_NAME && node.name.toString() == current) {
+      node.name = SimpleIdentifierImpl(replacement.toToken(node.name.offset));
+    }
+    if (scope == RenameScope.CLASS && node.name.toString() == current) {
+      node.name = SimpleIdentifierImpl(replacement.toToken(node.name.offset));
+    }
+    super.visitTypeName(node);
   }
 
   @override
@@ -105,19 +130,19 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
   }
 
   @override
-  void visitTypeName(TypeName node) {
-    if (scope == RenameScope.ENUM_NAME && node.name.toString() == current) {
-      node.name = SimpleIdentifierImpl(replacement.toToken(node.name.offset));
-    }
-    super.visitTypeName(node);
-  }
-
-  @override
   void visitDefaultFormalParameter(DefaultFormalParameter node) {
     if (scope == RenameScope.VARIABLE && sameScope) {
       if (node.identifier != null) rename(node.identifier!);
     }
     super.visitDefaultFormalParameter(node);
+  }
+
+  @override
+  void visitConstructorDeclaration(ConstructorDeclaration node) {
+    if (scope == RenameScope.CLASS) {
+      node.returnType = replacement.toNode(node.returnType.offset);
+    }
+    super.visitConstructorDeclaration(node);
   }
 
   @override

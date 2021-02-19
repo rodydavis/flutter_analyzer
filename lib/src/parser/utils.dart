@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:_fe_analyzer_shared/src/scanner/token_impl.dart';
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:flutter/material.dart';
 
 import '../analyzer.dart';
