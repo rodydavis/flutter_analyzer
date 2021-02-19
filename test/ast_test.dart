@@ -64,7 +64,7 @@ class MyWidget extends StatelessWidget {
 abstract class Me {
   bool get isTrue => true;
   set isTrue(bool val) {
-    
+
   }
 }
 
@@ -80,6 +80,7 @@ mixin You {
     expect(parser.visitor.classes[0].withClause, equals(['You']));
     expect(parser.visitor.classes[1].name, equals('MyWidget'));
     parser.visitor.debug(SOURCE_CODE);
+    // TODO: Check for "const callback = () {};callback(); return Scaffold(();""
   });
 
   test('modify multiple properties', () {
