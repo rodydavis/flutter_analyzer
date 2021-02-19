@@ -62,7 +62,10 @@ class MyWidget extends StatelessWidget {
 }
 
 abstract class Me {
-
+  bool get isTrue => true;
+  set isTrue(bool val) {
+    
+  }
 }
 
 mixin You {
