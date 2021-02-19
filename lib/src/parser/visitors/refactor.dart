@@ -121,6 +121,14 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
   }
 
   @override
+  void visitConstructorFieldInitializer(ConstructorFieldInitializer node) {
+    if (scope == RenameScope.VARIABLE && sameScope) {
+      rename(node.fieldName);
+    }
+    super.visitConstructorFieldInitializer(node);
+  }
+
+  @override
   void visitVariableDeclaration(VariableDeclaration node) {
     if (scope == RenameScope.VARIABLE && sameScope) {
       rename(node.name);

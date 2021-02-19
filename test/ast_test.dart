@@ -41,6 +41,7 @@ class MyClass {
       expect(value.name, equals('value0'));
       expect(fieldA.name, equals('a1'));
       expect(fieldB.name, equals('b1'));
+      parser.debug();
     });
   });
 
@@ -139,7 +140,6 @@ mixin You {
       expect(parser.visitor.classes[0].implementsClause, equals(['Me']));
       expect(parser.visitor.classes[0].withClause, equals(['You']));
       expect(parser.visitor.classes[1].name, equals('MyWidget'));
-      // parser.visitor.debug(SOURCE_CODE);
       // TODO: Check for "const callback = () {};callback(); return Scaffold(();""
     });
   });

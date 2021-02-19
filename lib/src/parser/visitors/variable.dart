@@ -16,9 +16,6 @@ class VariableVisitor extends CodeVisitor {
   bool get hasValue => root.equals != null && root.initializer != null;
 
   String get name => root.name.toString();
-  set _name(String value) {
-    root.name = value.toNode(root.name.offset);
-  }
 
   @override
   String get visitorName => 'variable';

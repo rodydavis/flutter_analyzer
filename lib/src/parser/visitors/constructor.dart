@@ -12,15 +12,6 @@ class ConstructorVisitor extends CodeVisitor {
       root.redirectedConstructor?.name.toString();
 
   String? get name => root.name?.toString();
-  set _name(String? value) {
-    if (name == null) {
-      throw 'Cannot rename default constructor';
-    }
-    if (value == null) {
-      throw 'Cannot create default constructor';
-    }
-    root.name = value.toNode(root.name!.offset);
-  }
 
   String get displayName {
     if (!hasName) return parent.name;

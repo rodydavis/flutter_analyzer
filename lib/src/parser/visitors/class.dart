@@ -13,9 +13,6 @@ class ClassVisitor extends CodeVisitor {
   CommentVisitor? comment;
 
   String get name => root.name.toString();
-  set _name(String value) {
-    root.name = value.toNode(root.name.offset);
-  }
 
   String? get extendsClause => root.extendsClause?.superclass.toString();
   List<String>? get withClause =>
@@ -30,6 +27,12 @@ class ClassVisitor extends CodeVisitor {
   final List<FieldVisitor> fields = [];
   final List<ConstructorVisitor> constructors = [];
   final List<MethodVisitor> methods = [];
+
+  // VariableVisitor? getField(String name) {
+  //   final search = root.getField(name);
+  //   if (search == null) return null;
+  //   return VariableVisitor(search, this);
+  // }
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
