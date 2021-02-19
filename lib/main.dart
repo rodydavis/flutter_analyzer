@@ -37,7 +37,6 @@ class FlutterExample extends StatefulWidget {
 
 // Simple Comment
 class _FlutterExampleState extends State<FlutterExample> {
-  FlutterParser? parser;
   final _controller = DartController();
   final _formKey = GlobalKey<FormState>();
 
@@ -49,11 +48,6 @@ class _FlutterExampleState extends State<FlutterExample> {
     this._update();
   }
 
-  void _update() {
-    parser = _controller.parser;
-    if (mounted && parser != null) setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,19 +55,37 @@ class _FlutterExampleState extends State<FlutterExample> {
         title: Text('Flutter Example'),
         actions: [
           IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: ready ? this.refresh : null,
+          ),
+          IconButton(
             icon: Icon(Icons.save),
             onPressed: ready ? this.save : null,
           ),
         ],
       ),
       body: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: TextField(
-              maxLength: null,
-              maxLines: null,
-              controller: _controller,
-              onEditingComplete: this.save,
+            child: NotificationListener<CodeSelection<String>>(
+              onNotification: (message) {
+                final ctx = ScaffoldMessenger.of(context);
+                ctx.hideCurrentSnackBar();
+                ctx.showSnackBar(SnackBar(content: Text(message.value)));
+                return true;
+              },
+              child: TextField(
+                expands: true,
+                maxLength: null,
+                maxLines: null,
+                controller: _controller,
+                onEditingComplete: this.save,
+                onChanged: (val) {
+                  _controller.analyze();
+                },
+              ),
             ),
           ),
           Container(
@@ -82,9 +94,10 @@ class _FlutterExampleState extends State<FlutterExample> {
                 ? CircularProgressIndicator()
                 : Form(
                     key: _formKey,
+                    autovalidateMode: AutovalidateMode.always,
                     child: ListView(
                       children: [
-                        for (final item in parser!.visitor.classes)
+                        for (final item in _controller.parser!.visitor.classes)
                           _buildClassSettings(context, item),
                       ],
                     ),
@@ -98,31 +111,76 @@ class _FlutterExampleState extends State<FlutterExample> {
   Widget _buildClassSettings(BuildContext context, ClassVisitor visitor) {
     return Column(
       children: [
-        TextFormField(
-          initialValue: visitor.name,
-          validator: (val) {
-            if (val == null) return 'must contain a value';
-            return null;
-          },
-          onSaved: (val) {
-            this.parser!.renameClass(visitor.name, val!);
+        ClassField(
+          name: visitor.name,
+          onChange: (val) {
+            this._controller.parser!.renameClass(visitor.name, val);
           },
         ),
       ],
     );
   }
 
-  bool get ready => parser != null;
+  void _update() {
+    if (mounted) setState(() {});
+  }
+
+  bool get ready => _controller.parser != null;
   void save() {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      final src = parser!.toSource();
-      print(src);
+      final src = _controller.parser!.toSource();
+      // print(src);
       _controller.text = Formatter(src).format();
     }
   }
+
+  void refresh() {
+    if (mounted) setState(() {});
+  }
 }
 
-/// Multiline Comment
-/// Doc2 Comment
-class Temp {}
+class ClassField extends StatefulWidget {
+  const ClassField({
+    Key? key,
+    required this.name,
+    required this.onChange,
+  }) : super(key: key);
+
+  final String name;
+  final ValueChanged<String> onChange;
+
+  @override
+  _ClassFieldState createState() => _ClassFieldState();
+}
+
+class _ClassFieldState extends State<ClassField> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.name;
+  }
+
+  @override
+  void didUpdateWidget(covariant ClassField oldWidget) {
+    if (_controller.text != widget.name) _controller.text = widget.name;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _controller,
+      validator: (val) {
+        if (val == null) return 'must contain a value';
+        if (val.contains(' ')) return 'cannot contain spaces';
+        if (!val.startsWith(RegExp(r'[A-Z][a-z]')))
+          return 'must start with a letter';
+        return null;
+      },
+      onSaved: (val) => widget.onChange(val!),
+    );
+  }
+}

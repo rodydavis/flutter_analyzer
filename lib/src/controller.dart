@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:string_scanner/string_scanner.dart';
@@ -12,6 +14,7 @@ class DartController extends TextEditingController {
   }) : super() {
     this.theme = theme ??= SyntaxTheme.dracula();
   }
+
   late SyntaxTheme theme;
   DartHighlighter? get highlighter =>
       parser == null ? null : DartHighlighter(parser!, this.theme, this);
@@ -33,13 +36,18 @@ class DartController extends TextEditingController {
 
   @override
   set text(String newText) {
+    if (super.text == newText) return;
     super.text = newText;
-    this.analyze(newText);
+    super.notifyListeners();
+    this.analyze();
   }
 
-  void analyze(String val) {
-    final formatted = Formatter(val).format();
-    parser = FlutterParser.fromString(formatted);
+  void analyze() async {
+    try {
+      parser = FlutterParser.fromString(Formatter(this.text).format());
+    } catch (e) {
+      parser = FlutterParser.fromString(this.text);
+    }
     super.notifyListeners();
   }
 }
@@ -57,7 +65,23 @@ class DartHighlighter {
     required bool withComposing,
   }) {
     final baseStyle = style ?? TextStyle();
+    final TextStyle composingStyle = baseStyle.merge(const TextStyle(
+      decoration: TextDecoration.underline,
+    ));
+    final TextStyle errorStyle = baseStyle.merge(const TextStyle(
+      decoration: TextDecoration.underline,
+      color: Colors.red,
+    ));
+    final composing = controller.value.composing;
     final spans = <CodeHighlight>[];
+    if (controller.value.isComposingRangeValid && withComposing) {
+      spans.add(CodeHighlight(
+        composing.start,
+        composing.end,
+        value: controller.value.text,
+        style: composingStyle,
+      ));
+    }
 
     final src = parser.code;
     final _scanner = StringScanner(src);
@@ -268,14 +292,7 @@ class DartHighlighter {
                 style: theme.classStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    CodeSelection<String>(
-                      value: () => c.name,
-                      onChanged: (val) {
-                        if (val.isEmpty) return;
-                        final raw = this.controller.text;
-                        this.controller.text = raw.split(c.name).join(val);
-                      },
-                    ).dispatch(context);
+                    CodeSelection<String>(value: c.name).dispatch(context);
                   },
               ));
             } else {
@@ -312,13 +329,7 @@ class DartHighlighter {
                     style: theme.baseStyle,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        CodeSelection<String>(
-                          value: () => v.name,
-                          onChanged: (val) {
-                            // v.name = val;
-                            print('v.name, ${v.name}');
-                          },
-                        ).dispatch(context);
+                        CodeSelection<String>(value: v.name).dispatch(context);
                       },
                   ));
                 }
@@ -334,6 +345,19 @@ class DartHighlighter {
         return TextSpan(style: theme.baseStyle, text: src);
       }
       lastLoopPosition = _scanner.position;
+    }
+
+    for (final error in this.parser.errors) {
+      spans.add(CodeHighlight(
+        error.offset,
+        error.offset + error.length,
+        value: error.message,
+        style: errorStyle,
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            CodeSelection<String>(value: error.message).dispatch(context);
+          },
+      ));
     }
 
     final List<InlineSpan> formattedText = <InlineSpan>[];
@@ -460,8 +484,6 @@ class CodeHighlight {
 class CodeSelection<T> extends Notification {
   CodeSelection({
     required this.value,
-    required this.onChanged,
   });
-  final ValueChanged<T> onChanged;
-  final T Function() value;
+  final T value;
 }
