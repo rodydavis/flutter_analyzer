@@ -29,10 +29,6 @@ class FieldVisitor extends CodeVisitor {
   List<VariableVisitor> get variables =>
       root.fields.variables.map((e) => VariableVisitor(e, this)).toList();
 
-  void renameVariable(String name, String value) {
-    parent.renameVariable(name, value);
-  }
-
   @override
   String get visitorName => 'field';
 

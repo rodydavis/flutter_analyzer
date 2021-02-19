@@ -107,8 +107,8 @@ class MyClass {
     expect(fieldB.name, equals('b'));
     obj.name = 'MyClass1';
     value.name = 'value0';
-    obj.renameVariable('a', 'a1');
-    obj.renameVariable('b', 'b1');
+    parser.renameVariable('a', 'a1');
+    parser.renameVariable('b', 'b1');
     obj.constructors[1].name = 'about';
     expect(obj.name, equals('MyClass1'));
     expect(obj.constructors[1].name, equals('about'));

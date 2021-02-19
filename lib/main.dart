@@ -105,8 +105,7 @@ class _FlutterExampleState extends State<FlutterExample> {
             return null;
           },
           onSaved: (val) {
-            visitor.name = val!;
-            print('visitor.name ${visitor.name} ${val}');
+            this.parser!.renameClass(visitor.name, val!);
           },
         ),
       ],

@@ -41,4 +41,41 @@ class FlutterParser {
 
   @override
   String toString() => this.code;
+
+  void renameVariable(String name, String value) {
+    for (var ctx in visitor.classes) {
+      for (final c in ctx.constructors) {
+        for (final f in c.fields) {
+          if (f.name == name) {
+            f.name = value;
+          }
+        }
+        for (final f in c.initializers) {
+          if (f.name == name) {
+            f.name = value;
+          }
+        }
+      }
+      for (final f in ctx.fields) {
+        for (var v in f.variables) {
+          if (v.name == name) {
+            v.name = value;
+          }
+        }
+      }
+    }
+  }
+
+  void renameClass(String name, String value) {
+    for (var ctx in visitor.classes) {
+      if (ctx.name == name) {
+        ctx.name = value;
+      }
+      for (final c in ctx.constructors) {
+        if (c.name == name) {
+          c.name = value;
+        }
+      }
+    }
+  }
 }

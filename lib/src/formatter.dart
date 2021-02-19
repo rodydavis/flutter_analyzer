@@ -8,5 +8,12 @@ class Formatter {
 
   static final formatter = DartFormatter();
 
-  String format() => formatter.format(source);
+  String format() {
+    try {
+      return formatter.format(source);
+    } catch (err) {
+      print('error: $err');
+    }
+    return source;
+  }
 }

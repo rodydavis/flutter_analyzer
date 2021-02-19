@@ -74,26 +74,3 @@ class ClassVisitor extends CodeVisitor {
       };
 }
 
-extension ClassVisitorUtils on ClassVisitor {
-  void renameVariable(String name, String value) {
-    for (final c in this.constructors) {
-      for (final f in c.fields) {
-        if (f.name == name) {
-          f.name = value;
-        }
-      }
-      for (final f in c.initializers) {
-        if (f.name == name) {
-          f.name = value;
-        }
-      }
-    }
-    for (final f in this.fields) {
-      for (var v in f.variables) {
-        if (v.name == name) {
-          v.name = value;
-        }
-      }
-    }
-  }
-}
