@@ -1,20 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:flutter_analyzer/src/parser/visitors/variable.dart';
-
-import '../parser.dart';
-import '../utils.dart';
-
-import 'class.dart';
-import 'enum.dart';
-import 'import.dart';
-import 'method.dart';
-import 'mixin.dart';
-
-export 'class.dart';
-export 'enum.dart';
-export 'method.dart';
-export 'import.dart';
-export 'mixin.dart';
+part of flutter_ast;
 
 class FileVisitor extends CodeVisitor {
   FileVisitor(this.root, this.parent) : super();

@@ -1,13 +1,27 @@
+library flutter_ast;
+
 import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
+import 'package:analyzer/src/dart/ast/ast.dart';
 
-import 'visitors/file.dart';
+import 'utils.dart';
 
-export 'visitors/file.dart';
+part 'visitors/class.dart';
+part 'visitors/comment.dart';
+part 'visitors/constructor.dart';
+part 'visitors/enum.dart';
+part 'visitors/expression.dart';
+part 'visitors/field.dart';
+part 'visitors/file.dart';
+part 'visitors/import.dart';
+part 'visitors/method.dart';
+part 'visitors/mixin.dart';
+part 'visitors/types.dart';
+part 'visitors/variable.dart';
 
 class FlutterParser {
   FlutterParser.fromString(this.code) {

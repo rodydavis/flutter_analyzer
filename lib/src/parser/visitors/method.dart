@@ -1,10 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../../analyzer.dart';
-import '../utils.dart';
-import 'class.dart';
-import 'expression.dart';
-import 'file.dart';
+part of flutter_ast;
 
 class FunctionBodyVisitor extends ExpressionScope {
   FunctionBodyVisitor(this.root, this.parent) : super();

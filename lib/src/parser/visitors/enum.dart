@@ -1,7 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../utils.dart';
-import 'file.dart';
+part of flutter_ast;
 
 class EnumVisitor extends CodeVisitor {
   EnumVisitor(this.root, this.parent) : super();

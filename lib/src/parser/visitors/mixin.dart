@@ -1,8 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../utils.dart';
-import 'comment.dart';
-import 'file.dart';
+part of flutter_ast;
 
 class MixinVisitor extends CodeVisitor {
   MixinVisitor(this.root, this.parent) : super() {

@@ -1,7 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../utils.dart';
-import 'expression.dart';
+part of flutter_ast;
 
 class VariableVisitor extends CodeVisitor {
   VariableVisitor(this.root, this.parent) : super() {

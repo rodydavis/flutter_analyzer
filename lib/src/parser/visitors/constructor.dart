@@ -1,8 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../utils.dart';
-import 'class.dart';
-import 'expression.dart';
+part of flutter_ast;
 
 class ConstructorVisitor extends CodeVisitor {
   ConstructorVisitor(this.root, this.parent) : super();

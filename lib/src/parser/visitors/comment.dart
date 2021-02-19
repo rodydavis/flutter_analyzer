@@ -1,6 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../utils.dart';
+part of flutter_ast;
 
 class CommentVisitor extends CodeVisitor {
   CommentVisitor(this.root, this.parent) : super() {

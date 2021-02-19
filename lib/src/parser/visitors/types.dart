@@ -1,8 +1,4 @@
-import 'package:analyzer/dart/ast/ast.dart';
-
-import '../../analyzer.dart';
-import '../utils.dart';
-import 'expression.dart';
+part of flutter_ast;
 
 class DoubleVisitor extends LiteralVisitor<double> {
   DoubleVisitor(this.root, this.parent) : super(root, parent);

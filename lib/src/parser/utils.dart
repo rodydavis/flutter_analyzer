@@ -33,28 +33,6 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
   void debug(String code) {
     final Map<String, dynamic> output = this.toJson();
     print(output.prettyPrint());
-    // _explore(code, output);
-  }
-
-  static _explore(String code, dynamic output) {
-    if (output is Map) {
-      final String n = output['name'];
-      if (output.containsKey('length') && output.containsKey('offset')) {
-        final int l = output['length'];
-        final int o = output['offset'];
-        print('$n [$o,$l] -> "${code.substring(o, o + (l))}"');
-      }
-      final p = output['params'];
-      for (final item in p.values) {
-        if (item is List) {
-          for (final child in item) {
-            _explore(code, child);
-          }
-        }
-      }
-      return;
-    }
-    print('-> ${output.runtimeType}');
   }
 
   String get visitorName;
@@ -69,16 +47,5 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
       'length': root.length,
       'params': params,
     };
-  }
-}
-
-exploreChildren(Map<String, dynamic> types, AstNode child) {
-  final desc = child.toString().trim();
-  final suffix =
-      '(${(desc.length > 10 ? desc.substring(0, 10) : desc).trim()})';
-  final key = child.runtimeType.toString() + suffix;
-  types[key] = Map<String, dynamic>();
-  for (final child in child.childEntities) {
-    if (child is AstNode) exploreChildren(types[key], child);
   }
 }
