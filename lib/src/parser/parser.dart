@@ -17,29 +17,6 @@ class FlutterParser {
       throwIfDiagnostics: false,
     );
     visitor = FileVisitor(this.result.unit, this);
-    final Map<String, dynamic> output = this.visitor.toJson();
-    _explore(output);
-  }
-
-  _explore(dynamic output) {
-    if (output is Map) {
-      final String n = output['name'];
-      if (output.containsKey('length') && output.containsKey('offset')) {
-        final int l = output['length'];
-        final int o = output['offset'];
-        print('$n [$o,$l] -> "${code.substring(o, o + (l - 1))}"');
-      }
-      final p = output['params'];
-      for (final item in p.values) {
-        if (item is List) {
-          for (final child in item) {
-            _explore(child);
-          }
-        }
-      }
-      return;
-    }
-    print('-> ${output.runtimeType}');
   }
 
   final String code;

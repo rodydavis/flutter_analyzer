@@ -30,9 +30,31 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
   AstNode get root;
 
   @visibleForTesting
-  void debug() {
+  void debug(String code) {
     final Map<String, dynamic> output = this.toJson();
     output.prettyPrint();
+    _explore(code, output);
+  }
+
+  _explore(String code, dynamic output) {
+    if (output is Map) {
+      final String n = output['name'];
+      if (output.containsKey('length') && output.containsKey('offset')) {
+        final int l = output['length'];
+        final int o = output['offset'];
+        print('$n [$o,$l] -> "${code.substring(o, o + (l))}"');
+      }
+      final p = output['params'];
+      for (final item in p.values) {
+        if (item is List) {
+          for (final child in item) {
+            _explore(code, child);
+          }
+        }
+      }
+      return;
+    }
+    print('-> ${output.runtimeType}');
   }
 
   String get visitorName;
