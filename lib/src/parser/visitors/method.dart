@@ -7,11 +7,7 @@ import 'expression.dart';
 import 'file.dart';
 
 class FunctionBodyVisitor extends ExpressionScope {
-  FunctionBodyVisitor(this.root, this.parent) : super() {
-    // final result = toTree(this.topMethod);
-    // print('info -> ${this.topMethod?.name}');
-    // result.prettyPrint();
-  }
+  FunctionBodyVisitor(this.root, this.parent) : super();
 
   static Map<String, dynamic> toTree(MethodCallVisitor? top) {
     final base = <String, dynamic>{};

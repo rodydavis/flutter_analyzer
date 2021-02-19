@@ -39,16 +39,11 @@ class CommentVisitor extends CodeVisitor {
   String get visitorName => 'comment';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'lines': lines,
         'isBlock': isBlock,
         'isDocumentation': isDocumentation,
         'isEndOfLine': isEndOfLine,
         'isSynthetic': isSynthetic,
-      },
-    };
-  }
+      };
 }

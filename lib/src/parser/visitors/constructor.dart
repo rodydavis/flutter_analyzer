@@ -55,18 +55,13 @@ class ConstructorVisitor extends CodeVisitor {
   String get visitorName => 'constructor_declaration';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
         'displayName': displayName,
         'position': position,
         'fields': fields.map((e) => e.toJson()).toList(),
         'initializers': initializers.map((e) => e.toJson()).toList(),
-      }
-    };
-  }
+      };
 }
 
 class FieldFormalParameterVisitor extends ConstructorFieldVisitor {
@@ -90,16 +85,11 @@ class FieldFormalParameterVisitor extends ConstructorFieldVisitor {
   String get visitorName => 'field_formal';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
         'type': type,
         'position': position,
-      }
-    };
-  }
+      };
 }
 
 class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
@@ -124,15 +114,10 @@ class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
   String get visitorName => 'field_formal_default';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
         'expression': expression?.toJson(),
-      }
-    };
-  }
+      };
 }
 
 class ConstructorFieldInitializerVisitor extends CodeVisitor {
@@ -154,15 +139,10 @@ class ConstructorFieldInitializerVisitor extends CodeVisitor {
   String get visitorName => 'field_initializer';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
         'expression': expression.toJson(),
-      }
-    };
-  }
+      };
 }
 
 abstract class ConstructorFieldVisitor extends CodeVisitor {

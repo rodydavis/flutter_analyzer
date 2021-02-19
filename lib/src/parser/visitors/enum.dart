@@ -26,15 +26,10 @@ class EnumVisitor extends CodeVisitor {
   String get visitorName => 'enum';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
         'values': values.map((e) => e.toJson()).toList(),
-      },
-    };
-  }
+      };
 }
 
 class EnumValueVisitor extends CodeVisitor {
@@ -52,12 +47,7 @@ class EnumValueVisitor extends CodeVisitor {
   String get visitorName => 'enum_value';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
-      },
-    };
-  }
+      };
 }

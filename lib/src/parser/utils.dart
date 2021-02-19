@@ -32,16 +32,23 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
 
   @visibleForTesting
   void debug() {
-    // final Map<String, dynamic> types = {};
-    // exploreChildren(types, this.root);
-    // types.prettyPrint();
-    final Map output = this.toJson();
+    final Map<String, dynamic> output = this.toJson();
     output.prettyPrint();
   }
 
   String get visitorName;
 
-  dynamic toJson();
+  Map<String, dynamic> get params;
+
+  dynamic toJson() {
+    return {
+      'name': visitorName,
+      'type': root.runtimeType.toString(),
+      'offset': root.offset,
+      'length': root.length,
+      'params': params,
+    };
+  }
 }
 
 exploreChildren(Map<String, dynamic> types, AstNode child) {

@@ -26,14 +26,9 @@ class ImportVisitor extends CodeVisitor {
   String get visitorName => 'import';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'url': url,
         'prefix': prefix,
         'deferred': deferred,
-      }
-    };
-  }
+      };
 }

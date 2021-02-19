@@ -60,10 +60,7 @@ class ClassVisitor extends CodeVisitor {
   String get visitorName => 'class_declaration';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'name': name,
         'fields': fields.map((e) => e.toJson()).toList(),
         'constructors': constructors.map((e) => e.toJson()).toList(),
@@ -74,9 +71,7 @@ class ClassVisitor extends CodeVisitor {
         'extendsClause': extendsClause,
         'isAbstract': isAbstract,
         'isSynthetic': isSynthetic,
-      }
-    };
-  }
+      };
 }
 
 extension ClassVisitorUtils on ClassVisitor {

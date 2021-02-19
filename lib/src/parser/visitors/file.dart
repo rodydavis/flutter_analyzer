@@ -43,7 +43,6 @@ class FileVisitor extends CodeVisitor {
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    mixins.add(MixinVisitor(node, this));
     super.visitMixinDeclaration(node);
   }
 
@@ -71,19 +70,14 @@ class FileVisitor extends CodeVisitor {
   String get visitorName => 'compilation_unit';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'classes': classes.map((e) => e.toJson()).toList(),
         'mixins': mixins.map((e) => e.toJson()).toList(),
         'enums': enums.map((e) => e.toJson()).toList(),
         'imports': imports.map((e) => e).toList(),
         'fields': fields.map((e) => e).toList(),
         'functions': functions,
-      }
-    };
-  }
+      };
 }
 
 extension FileVisitorUtil on FileVisitor {

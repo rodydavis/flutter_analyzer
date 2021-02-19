@@ -37,16 +37,11 @@ class FieldVisitor extends CodeVisitor {
   String get visitorName => 'field';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'isOptional': isOptional,
         'isStatic': isStatic,
         'type': type,
         'typeName': typeName,
         'variables': variables.map((e) => e.toJson()).toList(),
-      },
-    };
-  }
+      };
 }

@@ -37,16 +37,11 @@ class NamedExpressionVisitor extends ExpressionVisitor {
   String get visitorName => 'named_expression';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'methods': methods.map((e) => e.toJson()).toList(),
         'value': value,
         'label': label,
-      },
-    };
-  }
+      };
 }
 
 abstract class ExpressionScope extends CodeVisitor {
@@ -61,12 +56,7 @@ abstract class ExpressionScope extends CodeVisitor {
   }
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'methods': methods.map((e) => e.toJson()).toList(),
-      },
-    };
-  }
+      };
 }

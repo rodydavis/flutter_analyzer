@@ -27,10 +27,7 @@ class VariableVisitor extends CodeVisitor {
   String get visitorName => 'variable';
 
   @override
-  dynamic toJson() {
-    return {
-      'name': visitorName,
-      'params': {
+  Map<String, dynamic> get params => {
         'isLate': isLate,
         'isFinal': isFinal,
         'isConst': isConst,
@@ -38,7 +35,5 @@ class VariableVisitor extends CodeVisitor {
         'isPrivate': isPrivate,
         'expression': expression?.toJson(),
         'name': name,
-      }
-    };
-  }
+      };
 }
