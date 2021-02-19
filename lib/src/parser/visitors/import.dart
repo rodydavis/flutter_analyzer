@@ -11,7 +11,7 @@ class ImportVisitor extends CodeVisitor {
 
   bool get deferred => root.deferredKeyword != null;
 
-  String get url => this.root.uriContent ?? '';
+  String get url => this.root.uriContent ?? this.root.uri.stringValue ?? '';
 
   String? get prefix => this.root.prefix?.toString();
   set prefix(String? value) {

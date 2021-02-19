@@ -1,7 +1,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 
+import '../../analyzer.dart';
 import '../utils.dart';
 import 'method.dart';
+import 'types.dart';
 
 class ExpressionVisitor extends ExpressionScope {
   ExpressionVisitor(this.root, this.parent) : super();
@@ -10,7 +12,31 @@ class ExpressionVisitor extends ExpressionScope {
   final CodeVisitor parent;
 
   static ExpressionVisitor parse(Expression root, CodeVisitor parent) {
-    if (root is NamedExpression) {
+    if (root is LiteralImpl) {
+      if (root is IntegerLiteralImpl) {
+        return IntVisitor(root, parent);
+      }
+      if (root is BooleanLiteralImpl) {
+        return BoolVisitor(root, parent);
+      }
+      if (root is DoubleLiteralImpl) {
+        return DoubleVisitor(root, parent);
+      }
+      if (root is SimpleStringLiteralImpl) {
+        return StringVisitor(root, parent);
+      }
+      return DynamicVisitor(root, parent);
+    }
+    if (root is MethodInvocationImpl) {
+      return MethodInvocationVisitor(root, parent);
+    }
+    if (root is PrefixedIdentifierImpl) {
+      return PrefixedVisitor(root, parent);
+    }
+    if (root is SimpleIdentifierImpl) {
+      return SimpleVisitor(root, parent);
+    }
+    if (root is NamedExpressionImpl) {
       return NamedExpressionVisitor(root, parent);
     }
     return ExpressionVisitor(root, parent);
@@ -21,7 +47,9 @@ class ExpressionVisitor extends ExpressionScope {
 }
 
 class NamedExpressionVisitor extends ExpressionVisitor {
-  NamedExpressionVisitor(this.root, this.parent) : super(root, parent);
+  NamedExpressionVisitor(this.root, this.parent) : super(root, parent) {
+    this.expression = ExpressionVisitor.parse(root.expression, this);
+  }
 
   final NamedExpression root;
   final CodeVisitor parent;
@@ -31,7 +59,7 @@ class NamedExpressionVisitor extends ExpressionVisitor {
     root.name.label = value.toNode(root.name.label.offset);
   }
 
-  dynamic get value => this.root.expression.toString();
+  late ExpressionVisitor expression;
 
   @override
   String get visitorName => 'named_expression';
@@ -39,7 +67,7 @@ class NamedExpressionVisitor extends ExpressionVisitor {
   @override
   Map<String, dynamic> get params => {
         'methods': methods.map((e) => e.toJson()).toList(),
-        'value': value,
+        'value': expression.toJson(),
         'label': label,
       };
 }

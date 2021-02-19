@@ -9,23 +9,23 @@ import 'file.dart';
 class FunctionBodyVisitor extends ExpressionScope {
   FunctionBodyVisitor(this.root, this.parent) : super();
 
-  static Map<String, dynamic> toTree(MethodCallVisitor? top) {
-    final base = <String, dynamic>{};
-    if (top != null) {
-      base['name'] = top.name;
-      base['params'] = {};
-      for (final arg in top.arguments) {
-        if (arg is NamedExpressionVisitor) {
-          if (arg.root.expression is LiteralImpl) {
-            base['params'][arg.label] = arg.value;
-          } else {
-            base['params'][arg.label] = toTree(arg.topMethod);
-          }
-        }
-      }
-    }
-    return base;
-  }
+  // static Map<String, dynamic> toTree(MethodCallVisitor? top) {
+  //   final base = <String, dynamic>{};
+  //   if (top != null) {
+  //     base['name'] = top.name;
+  //     base['params'] = {};
+  //     for (final arg in top.arguments) {
+  //       if (arg is NamedExpressionVisitor) {
+  //         if (arg.root.expression is LiteralImpl) {
+  //           base['params'][arg.label] = arg.value;
+  //         } else {
+  //           base['params'][arg.label] = toTree(arg.topMethod);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return base;
+  // }
 
   final CodeVisitor parent;
   final FunctionBody root;
@@ -47,7 +47,7 @@ class FunctionBodyVisitor extends ExpressionScope {
         'isGenerator': isGenerator,
         'isSynchronous': isSynchronous,
         'isSynthetic': isSynthetic,
-        'body': toTree(this.topMethod),
+        'body': this.topMethod?.toJson(),
       },
     };
   }

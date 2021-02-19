@@ -32,11 +32,11 @@ abstract class CodeVisitor extends RecursiveAstVisitor<void> {
   @visibleForTesting
   void debug(String code) {
     final Map<String, dynamic> output = this.toJson();
-    output.prettyPrint();
-    _explore(code, output);
+    print(output.prettyPrint());
+    // _explore(code, output);
   }
 
-  _explore(String code, dynamic output) {
+  static _explore(String code, dynamic output) {
     if (output is Map) {
       final String n = output['name'];
       if (output.containsKey('length') && output.containsKey('offset')) {
