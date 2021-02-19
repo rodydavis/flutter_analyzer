@@ -18,7 +18,6 @@ extension on Object {
   String prettyPrint() {
     final JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final String prettyprint = encoder.convert(this);
-    print(prettyprint);
     return prettyprint;
   }
 }
