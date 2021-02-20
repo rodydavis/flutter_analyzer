@@ -1,6 +1,11 @@
 name: flutter_analyzer
 description: A Flutter Analyzer for Flutter Source Code.
-version: 1.0.0+1
+version: 1.0.0+2
+authors:
+ - Rody Davis <rody.davis.jr@gmail.com>
+maintainer: Rody Davis (@rodydavis)
+homepage: https://github.com/rodydavis/plugins
+repository: https://github.com/rodydavis/flutter_analyzer
 
 environment:
   sdk: ">=2.12.0-259.8.beta <3.0.0"
