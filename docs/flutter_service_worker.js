@@ -4,36 +4,36 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "version.json": "0f653d245f7526054eb3452b0633159e",
-  "index.html": "6e1d0d3fab536055511dd201396ffc21",
-  "/": "6e1d0d3fab536055511dd201396ffc21",
-  "main.dart.js": "233372bc79ca82527f67bf836897255b",
-  "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-  "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-  "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-  "manifest.json": "6ffa153018287d82670ea1386ea80bec",
-  "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
-  "assets/NOTICES": "a9273add1c8497d3e84cee8ffe585862",
-  "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-  "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
-  "assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac"
+"index.html": "6e1d0d3fab536055511dd201396ffc21",
+"/": "6e1d0d3fab536055511dd201396ffc21",
+"main.dart.js": "5443ed049bea83f96514c9e0980d7f1a",
+"favicon.png": "5dcef449791fa27946b3d35ad8803796",
+"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
+"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
+"manifest.json": "6ffa153018287d82670ea1386ea80bec",
+"assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
+"assets/NOTICES": "a9273add1c8497d3e84cee8ffe585862",
+"assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
+"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
+"assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac"
 };
 
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = [
   "/",
-  "main.dart.js",
-  "index.html",
-  "assets/NOTICES",
-  "assets/AssetManifest.json",
-  "assets/FontManifest.json"];
+"main.dart.js",
+"index.html",
+"assets/NOTICES",
+"assets/AssetManifest.json",
+"assets/FontManifest.json"];
 // During install, the TEMP cache is populated with the application shell files.
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   return event.waitUntil(
     caches.open(TEMP).then((cache) => {
       return cache.addAll(
-        CORE.map((value) => new Request(value, { 'cache': 'reload' })));
+        CORE.map((value) => new Request(value, {'cache': 'reload'})));
     })
   );
 });
@@ -41,8 +41,8 @@ self.addEventListener("install", (event) => {
 // During activate, the cache is populated with the temp files downloaded in
 // install. If this service worker is upgrading from one with a saved
 // MANIFEST, then use this to retain unchanged resource files.
-self.addEventListener("activate", function (event) {
-  return event.waitUntil(async function () {
+self.addEventListener("activate", function(event) {
+  return event.waitUntil(async function() {
     try {
       var contentCache = await caches.open(CACHE_NAME);
       var tempCache = await caches.open(TEMP);
@@ -120,7 +120,7 @@ self.addEventListener("fetch", (event) => {
     return onlineFirst(event);
   }
   event.respondWith(caches.open(CACHE_NAME)
-    .then((cache) => {
+    .then((cache) =>  {
       return cache.match(event.request).then((response) => {
         // Either respond with the cached resource, or perform a fetch and
         // lazily populate the cache.
