@@ -1,6 +1,5 @@
 name: flutter_analyzer
 description: A Flutter Analyzer for Flutter Source Code.
-publish_to: "none"
 version: 1.0.0+1
 
 environment:
