@@ -48,13 +48,40 @@ final value = new MyClass();
 
   group('methods', () {
     const SOURCE_CODE = r'''
-class MyClass {
-  MyClass({this.child});
+class MyClass extends BaseClass {
+  MyClass({this.child, this.title});
   final MyClass? child;
+
+  final String? title;
 
   MyClass? build() {
     return MyClass(
-      child: MyClass(),
+      title: title,
+      child: MyClass(
+         title: this.title,
+         child: BaseClass(
+          title: this.title,
+        ),
+      ),
+    );
+  }
+}
+
+class BaseClass {
+  BaseClass({this.title});
+  final String? title;
+
+  MyClass? buildScope() {
+    final _base = MyClass();
+    return _base.build();
+  }
+
+   MyClass? build() {
+    return  MyClass(
+        title: this.title,
+        child: BaseClass(
+          title: this.title,
+      )
     );
   }
 }
@@ -64,7 +91,7 @@ class MyClass {
 
     test('error check', () {
       expect(parser.result.errors.length == 0, equals(true));
-      expect(parser.visitor.classes.length, equals(1));
+      expect(parser.visitor.classes.length, equals(2));
     });
 
     test('rename class', () {
@@ -72,6 +99,21 @@ class MyClass {
       parser.renameClass('MyClass', 'MyClass1');
       expect(obj.constructors[0].name, equals(null));
       expect(obj.name, equals('MyClass1'));
+    });
+
+    test('rename field', () {
+      final field = obj.fields[1].variables[0];
+      expect(field.name, equals('title'));
+      parser.renameVariable('MyClass1', 'title', 'title1');
+      expect(field.name, equals('title1'));
+    });
+
+    test('rename method', () {
+      final method = obj.methods[0];
+      expect(method.name, equals('build'));
+      parser.renameClassMethod('MyClass1', 'build', 'build1');
+      expect(method.name, equals('build1'));
+      // parser.debug();
     });
   });
 
@@ -171,7 +213,6 @@ mixin You {
       expect(parser.visitor.classes[0].withClause, equals(['You']));
       expect(parser.visitor.classes[1].name, equals('MyWidget'));
       // TODO: Check for "const callback = () {};callback(); return Scaffold(();""
-      parser.debug();
     });
   });
 }

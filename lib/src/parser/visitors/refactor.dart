@@ -36,6 +36,7 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
   final String? match;
 
   ClassDeclaration? _currentClass;
+  NamedExpression? _namedExpression;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -55,6 +56,12 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
       }
     }
     super.visitEnumDeclaration(node);
+  }
+
+  @override
+  void visitNamedExpression(NamedExpression node) {
+    _namedExpression = node;
+    super.visitNamedExpression(node);
   }
 
   @override
@@ -122,6 +129,22 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
   }
 
   @override
+  void visitLabel(Label node) {
+    if (scope == RenameScope.VARIABLE && sameScope) {
+      rename(node.label);
+    }
+    super.visitLabel(node);
+  }
+
+  @override
+  void visitPropertyAccess(PropertyAccess node) {
+    if (scope == RenameScope.VARIABLE && sameScope) {
+      rename(node.propertyName);
+    }
+    super.visitPropertyAccess(node);
+  }
+
+  @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
     if (scope == RenameScope.VARIABLE && sameScope) {
       rename(node.identifier);
@@ -139,7 +162,7 @@ class RefactorVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (scope == RenameScope.CLASS) {
+    if (scope == RenameScope.CLASS && _currentClass?.name.toString() == current) {
       node.returnType = replacement.toNode(node.returnType.offset);
     }
     super.visitConstructorDeclaration(node);

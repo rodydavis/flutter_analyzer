@@ -75,6 +75,14 @@ class FlutterParser {
     _rename(RefactorVisitor.variableName(oldVal, newVal, className));
   }
 
+  void renameClassMethod(String className, String oldVal, String newVal) {
+    _rename(RefactorVisitor.methodName(oldVal, newVal, className));
+  }
+
+  void renameMethod(String oldVal, String newVal) {
+    _rename(RefactorVisitor.methodTopLevelName(oldVal, newVal));
+  }
+
   void _rename(RefactorVisitor refactor) {
     this.root.visitChildren(refactor);
   }
@@ -83,6 +91,12 @@ class FlutterParser {
   void debug() {
     // ignore: invalid_use_of_visible_for_testing_member
     this.visitor.debug(this.code);
-    print(this.toSource());
+    _explore(this.visitor.root);
+    // print(this.toSource());
   }
+}
+
+void _explore(SyntacticEntity node) {
+  print('${node.runtimeType} ${node.toString()}');
+  if (node is AstNode) node.childEntities.forEach(_explore);
 }
