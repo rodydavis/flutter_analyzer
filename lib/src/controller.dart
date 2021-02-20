@@ -19,6 +19,7 @@ class DartController extends TextEditingController {
   DartHighlighter? get highlighter =>
       parser == null ? null : DartHighlighter(parser!, this.theme, this);
   FlutterParser? parser;
+  Timer? _debounce;
 
   @override
   TextSpan buildTextSpan({
@@ -43,12 +44,15 @@ class DartController extends TextEditingController {
   }
 
   void analyze() async {
-    try {
-      parser = FlutterParser.fromString(Formatter(this.text).format());
-    } catch (e) {
-      parser = FlutterParser.fromString(this.text);
-    }
-    super.notifyListeners();
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 150), () {
+      try {
+        parser = FlutterParser.fromString(Formatter(this.text).format());
+      } catch (e) {
+        parser = FlutterParser.fromString(this.text);
+      }
+      super.notifyListeners();
+    });
   }
 }
 
@@ -64,7 +68,11 @@ class DartHighlighter {
     TextStyle? style,
     required bool withComposing,
   }) {
-    final baseStyle = style ?? TextStyle();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    TextStyle baseStyle = style ?? TextStyle();
+    baseStyle = baseStyle.merge(TextStyle(
+      color: isDark ? Colors.white : Colors.black,
+    ));
     final TextStyle composingStyle = baseStyle.merge(const TextStyle(
       decoration: TextDecoration.underline,
     ));
