@@ -58,6 +58,10 @@ class _FlutterExampleState extends State<FlutterExample> {
             icon: Icon(Icons.refresh),
             onPressed: ready ? this.refresh : null,
           ),
+           IconButton(
+            icon: Icon(Icons.style),
+            onPressed: ready ? this.format : null,
+          ),
           IconButton(
             icon: Icon(Icons.save),
             onPressed: ready ? this.save : null,
@@ -177,6 +181,10 @@ class _FlutterExampleState extends State<FlutterExample> {
       // print(src);
       _controller.text = Formatter(src).format();
     }
+  }
+
+  void format() {
+    _controller.text = Formatter(_controller.text).format();
   }
 
   void refresh() {
