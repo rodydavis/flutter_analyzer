@@ -12,6 +12,12 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Flutter Build",
+            "type": "shell",
+            "command": "flutter build web --no-sound-null-safety && rm -rf docs/ && mkdir docs && cp -R build/web/ docs/",
+            "problemMatcher": [],
         }
     ]
 }
