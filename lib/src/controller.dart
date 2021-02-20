@@ -392,10 +392,13 @@ class DartHighlighter {
 }
 
 class Dart {
-  static List<String> tokens = const [
+  static List<String> tokens = const {
     'abstract',
     'as',
     'late',
+    'mixin',
+    'with',
+    'on',
     'required',
     'override',
     'class',
@@ -405,7 +408,6 @@ class Dart {
     'break',
     'case',
     'catch',
-    'class',
     'const',
     'continue',
     'default',
@@ -448,12 +450,11 @@ class Dart {
     'var',
     'void',
     'while',
-    'with',
     'yield',
     'show'
-  ];
+  }.toList();
 
-  static List<String> types = const [
+  static List<String> types = const {
     'int',
     'num',
     'bool',
@@ -462,7 +463,7 @@ class Dart {
     'Map',
     'List',
     'Set',
-  ];
+  }.toList();
 }
 
 extension StringUtils on String {
