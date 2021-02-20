@@ -16,7 +16,7 @@
         {
             "label": "Flutter Build",
             "type": "shell",
-            "command": "flutter build web --no-sound-null-safety && rm -rf docs/ && mkdir docs && cp -R build/web/ docs/",
+            "command": "cd example && flutter build web --no-sound-null-safety && cd .. && rm -rf docs/ && mkdir docs && cp -R example/build/web/ docs/",
             "problemMatcher": [],
         }
     ]

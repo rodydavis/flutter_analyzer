@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'src/controller.dart';
-import 'src/default.dart';
-import 'src/formatter.dart';
-import 'src/parser/parser.dart';
+import 'package:flutter_analyzer/flutter_analyzer.dart';
 
 void main() {
   runApp(MyApp());
