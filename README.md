@@ -2,6 +2,8 @@
 
 A Flutter Analyzer for Flutter Source Code.
 
+https://pub.dev/packages/flutter_analyzer
+
 ## Overview
 
 - Parse Source Code
