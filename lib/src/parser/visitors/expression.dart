@@ -54,7 +54,7 @@ class NamedExpressionVisitor extends ExpressionVisitor {
 
   String get label => root.name.label.toString();
   set label(String value) {
-    root.name.label = value.toNode(root.name.label.offset);
+    // root.name.label = value.toNode(root.name.label.offset);
   }
 
   late ExpressionVisitor expression;

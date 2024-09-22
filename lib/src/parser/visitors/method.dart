@@ -47,7 +47,7 @@ class MethodVisitor extends ExpressionScope {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = value.toNode(root.name.offset);
+    // root.name = value.toNode(root.name.offset);
   }
 
   @override
@@ -83,7 +83,7 @@ class FunctionVisitor extends ExpressionScope {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = value.toNode(root.name.offset);
+    // root.name = value.toNode(root.name.offset);
   }
 
   @override
@@ -116,7 +116,7 @@ class MethodCallVisitor extends ExpressionScope {
 
   String get name => root.methodName.toString();
   set name(String value) {
-    root.methodName = value.toNode(root.methodName.offset);
+    // root.methodName = value.toNode(root.methodName.offset);
   }
 
   bool get isCascaded => root.isCascaded;

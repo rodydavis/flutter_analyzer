@@ -1,16 +1,16 @@
 library flutter_ast;
 
-import 'package:analyzer/dart/analysis/features.dart';
-import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart';
-import 'package:analyzer/source/line_info.dart';
-import 'package:analyzer/src/dart/ast/ast.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_analyzer/src/analyzer.dart';
+// import 'package:analyzer/dart/analysis/features.dart';
+// import 'package:analyzer/dart/analysis/results.dart';
+// import 'package:analyzer/dart/analysis/utilities.dart';
+// import 'package:analyzer/dart/ast/ast.dart';
+// import 'package:analyzer/error/error.dart';
+// import 'package:analyzer/source/line_info.dart';
+// import 'package:analyzer/src/dart/ast/ast.dart';
 
 import 'utils.dart';
+
+import '../analyzer.dart';
 
 part 'visitors/class.dart';
 part 'visitors/comment.dart';
@@ -22,16 +22,19 @@ part 'visitors/file.dart';
 part 'visitors/import.dart';
 part 'visitors/method.dart';
 part 'visitors/mixin.dart';
-part 'visitors/refactor.dart';
+// part 'visitors/refactor.dart';
 part 'visitors/types.dart';
 part 'visitors/variable.dart';
 
 class FlutterParser {
-  FlutterParser.fromString(this.code) {
+  FlutterParser.fromString(
+    this.code, {
+    bool throwIfDiagnostics = false,
+  }) {
     this.result = parseString(
       content: this.code,
       featureSet: FeatureSet.latestLanguageVersion(),
-      throwIfDiagnostics: false,
+      throwIfDiagnostics: throwIfDiagnostics,
     );
     visitor = FileVisitor(this.result.unit, this);
   }
@@ -59,35 +62,34 @@ class FlutterParser {
   @override
   String toString() => this.code;
 
-  void renameClass(String oldVal, String newVal) {
-    _rename(RefactorVisitor.className(oldVal, newVal));
-  }
+  // void renameClass(String oldVal, String newVal) {
+  //   _rename(RefactorVisitor.className(oldVal, newVal));
+  // }
 
-  void renameEnum(String oldVal, String newVal) {
-    _rename(RefactorVisitor.enumName(oldVal, newVal));
-  }
+  // void renameEnum(String oldVal, String newVal) {
+  //   _rename(RefactorVisitor.enumName(oldVal, newVal));
+  // }
 
-  void renameEnumVal(String enumName, String oldVal, String newVal) {
-    _rename(RefactorVisitor.enumValue(oldVal, newVal, enumName));
-  }
+  // void renameEnumVal(String enumName, String oldVal, String newVal) {
+  //   _rename(RefactorVisitor.enumValue(oldVal, newVal, enumName));
+  // }
 
-  void renameVariable(String className, String oldVal, String newVal) {
-    _rename(RefactorVisitor.variableName(oldVal, newVal, className));
-  }
+  // void renameVariable(String className, String oldVal, String newVal) {
+  //   _rename(RefactorVisitor.variableName(oldVal, newVal, className));
+  // }
 
-  void renameClassMethod(String className, String oldVal, String newVal) {
-    _rename(RefactorVisitor.methodName(oldVal, newVal, className));
-  }
+  // void renameClassMethod(String className, String oldVal, String newVal) {
+  //   _rename(RefactorVisitor.methodName(oldVal, newVal, className));
+  // }
 
-  void renameMethod(String oldVal, String newVal) {
-    _rename(RefactorVisitor.methodTopLevelName(oldVal, newVal));
-  }
+  // void renameMethod(String oldVal, String newVal) {
+  //   _rename(RefactorVisitor.methodTopLevelName(oldVal, newVal));
+  // }
 
-  void _rename(RefactorVisitor refactor) {
-    this.root.visitChildren(refactor);
-  }
+  // void _rename(RefactorVisitor refactor) {
+  //   this.root.visitChildren(refactor);
+  // }
 
-  @visibleForTesting
   void debug() {
     // ignore: invalid_use_of_visible_for_testing_member
     this.visitor.debug(this.code);

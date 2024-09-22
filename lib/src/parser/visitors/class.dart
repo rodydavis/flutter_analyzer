@@ -21,7 +21,7 @@ class ClassVisitor extends CodeVisitor {
       root.implementsClause?.interfaces.map((e) => e.toString()).toList();
 
   bool get isPrivate => name.startsWith('_');
-  bool get isAbstract => root.isAbstract;
+  bool get isAbstract => root.abstractKeyword != null;
   bool get isSynthetic => root.isSynthetic;
 
   final List<FieldVisitor> fields = [];

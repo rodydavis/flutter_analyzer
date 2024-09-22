@@ -64,11 +64,11 @@ class FieldFormalParameterVisitor extends ConstructorFieldVisitor {
   bool get hasType => root.type != null;
   String? get type => root.type?.type?.toString();
 
-  String? get name => root.identifier.toString();
+  String? get name => root.name.toString();
   set name(String? value) {
-    if (value == null) return;
-    final identifier = root.identifier;
-    identifier.token = value.toToken(identifier.offset);
+    // if (value == null) return;
+    // final identifier = root.name;
+    // identifier.name = value.toToken(identifier.offset);
   }
 
   @override
@@ -90,11 +90,26 @@ class DefaultFormalParameterVisitor extends ConstructorFieldVisitor {
   final DefaultFormalParameter root;
   final ConstructorVisitor parent;
 
-  String? get name => root.identifier?.toString();
+  String? get type {
+    if (root.isExplicitlyTyped) {
+      for (final item in root.childEntities) {
+        if (item is SimpleFormalParameterImpl) {
+          for (final sub in item.childEntities) {
+            if (sub is NamedTypeImpl) {
+              return sub.name2.toString();
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  String? get name => root.name?.toString();
   set name(String? value) {
-    if (value == null) return;
-    final identifier = root.identifier!;
-    identifier.token = value.toToken(identifier.offset);
+    // if (value == null) return;
+    // final identifier = root.identifier!;
+    // identifier.token = value.toToken(identifier.offset);
   }
 
   ExpressionVisitor? expression;
@@ -120,9 +135,9 @@ class ConstructorFieldInitializerVisitor extends CodeVisitor {
 
   String? get name => root.fieldName.toString();
   set name(String? value) {
-    if (value == null) return;
-    final identifier = root.fieldName;
-    identifier.token = value.toToken(identifier.offset);
+    // if (value == null) return;
+    // final identifier = root.fieldName;
+    // identifier.token = value.toToken(identifier.offset);
   }
 
   @override
@@ -147,6 +162,7 @@ abstract class ConstructorFieldVisitor extends CodeVisitor {
   bool get isRequiredPositional => root.isRequiredPositional;
   bool get isSynthetic => root.isSynthetic;
   String? get name;
+  String? get type;
   set name(String? value);
   bool? get isPrivate => name?.startsWith('_');
 
@@ -166,6 +182,7 @@ abstract class ConstructorFieldVisitor extends CodeVisitor {
         'isSynthetic': isSynthetic,
         'isPrivate': isPrivate,
         'name': name,
+        'type': type,
       }
     };
   }

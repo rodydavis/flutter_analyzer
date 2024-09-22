@@ -14,7 +14,7 @@ class MixinVisitor extends CodeVisitor {
 
   String get name => root.name.toString();
   set name(String value) {
-    root.name = value.toNode(root.name.offset);
+    // root.name = value.toNode(root.name.offset);
   }
 
   @override

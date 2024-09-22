@@ -28,7 +28,7 @@ class BoolVisitor extends LiteralVisitor<bool> {
   @override
   bool get value => root.value;
   set value(bool val) {
-    root.value = val;
+    // root.value = val;
   }
 }
 
